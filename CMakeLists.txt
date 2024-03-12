@@ -25,7 +25,10 @@ FetchContent_MakeAvailable(SFML)
 
 set(HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 set(SOURCES 
-    src/Cpu.cpp
+    "src/Cpu.cpp"
+    "src/Opcode.cpp"
+    "src/Memory.cpp"
+    "src/Utils.cpp"
 )
 
 ####### library ########
@@ -35,7 +38,7 @@ target_link_libraries(gbc_emulator_lib PRIVATE Boost::log Boost::log_setup)
 ####### executable ########
 include_directories(${HEADERS} )
 add_executable(gbc_emulator "src/main.cpp")
-#target_include_directories(MacroRecorder PUBLIC ${HEADERS}) is this even needed?
+
 target_link_libraries(gbc_emulator PRIVATE sfml-graphics gbc_emulator_lib )
 target_compile_features(gbc_emulator PRIVATE cxx_std_17)
 

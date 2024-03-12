@@ -1,13 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <boost/log/trivial.hpp>
-#include "Opcode.h"
 #include <fstream>
 #include <iostream>
 #include <Logger.h>
-#include <iomanip>
 #include <ctime>
 #include "boost/date_time/local_time/local_time.hpp"
-#include "Register.h"
+
+#include "Cpu.h"
+//#include "Cpu.h"
+
 using namespace gbc;
 using namespace boost::posix_time;
 
@@ -16,10 +17,10 @@ std::vector<char> LoadRom(const std::string& file_path)
 
     std::ifstream infile(file_path, std::ios_base::binary);
 
-    return std::vector<char>( std::istreambuf_iterator<char>(infile),
-                            std::istreambuf_iterator<char>() );
+    return std::vector<char>( std::istreambuf_iterator< char>(infile),
+                            std::istreambuf_iterator< char>() );
 }
-
+/*
 void shit()
 {
 
@@ -46,30 +47,31 @@ void shit()
     register16_t re(ret, "C");
     std::cout << (ret == expect) << std::endl;
     address16_t in(0xF00A, "OPCODE_INSTRUCTION");
-    Opcode::OpcodeCommand cmd = Opcode::opcode_map.at(0xF8);
-    cmd.Execute(in);
-    Registers::A.mValue = 0xAB;
-    BOOST_LOG_TRIVIAL(debug) <<  Registers::A;
-    cmd.Execute(in);
-    std::cout << Utils::Time::NowNano() << std::endl;
+  //  gbc::OpcodeCommand cmd = Opcode::opcode_map().at(0xF8);
+  //  cmd.Execute(in);
+    Cpu::Instance()->A.mValue = 0xAB;
+    BOOST_LOG_TRIVIAL(debug) <<  Cpu::Instance()->A;
+  //  cmd.Execute(in);
+    std::cout << gbc::Utils::Time::NowNano() << std::endl;
     uint64_t tick_rate_nano = 1000000000/CPU_SPEED;
     std::cout << "tick_rate_nano = " << tick_rate_nano << std::endl;
     uint64_t cycles = 0;
     uint64_t next_tick_nano = 0;
-    auto start = Utils::Time::NowNano();
+    auto start = gbc::Utils::Time::NowNano();
     std::cout << "start= " << start << std::endl;
     while (cycles < CPU_SPEED)
     {
         //uint64_t now = Utils::Time::NowNano();
-        if (Utils::Time::NowNano() >= next_tick_nano)
+        if (gbc::Utils::Time::NowNano() >= next_tick_nano)
         {
             cycles++;
-            next_tick_nano = Utils::Time::NowNano() + tick_rate_nano;
+            next_tick_nano = gbc::Utils::Time::NowNano() + tick_rate_nano;
         }
     }
-    auto end = Utils::Time::NowNano();
+    auto end = gbc::Utils::Time::NowNano();
     std::cout << "end= " << (end - start) << std::endl;
 }
+*/
 
 int main()
 {
@@ -126,6 +128,46 @@ int main()
     BOOST_LOG_TRIVIAL(debug) << regc;
     regc--;
     BOOST_LOG_TRIVIAL(debug) << regc;
+
+    Cpu cpu;
+    Cpu::Instance()->B.mValue = 0xAB;
+    BOOST_LOG_TRIVIAL(debug) << &(Cpu::Instance()->B);
+     BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->B;
+    cpu.Execute();
+    //cpu.Execute();
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
+    Cpu::Instance()->B.mValue = 0xFF;
+    cpu.Execute();
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
+
+    Cpu::Instance()->PC.mValue = 0xABCD;
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->PC;
+
+    Cpu::Instance()->A.mValue = 0xA0;
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
+
+    Cpu::Instance()->B.mValue = 0x0B;
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->B;
+
+    Cpu::Instance()->Execute();
+    BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
+
+    reg.mValue = 0x0;
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.SetBitLSB(0);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.ResetBitLSB(0);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.SetBitLSB(2);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.ResetBitLSB(2);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.SetBitLSB(7);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.ResetBitLSB(7);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
+    reg.ResetBitLSB(7);
+    BOOST_LOG_TRIVIAL(debug) << reg; 
     
 
     

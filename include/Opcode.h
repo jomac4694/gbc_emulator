@@ -5,13 +5,15 @@
 #include <string>
 #include <functional>
 #include <iostream>
-#include "Cpu.h"
 #include <boost/log/trivial.hpp>
-#include "Memory.h"
+#include "Register.h"
+#include "Cpu.h"
+#include <memory>
 namespace gbc
 {
-namespace Opcode
-{
+
+
+
     struct OpcodeCommand
     {
         OpcodeCommand(std::string name, std::function<void()> command, int cycles)
@@ -27,7 +29,7 @@ namespace Opcode
 
         int Execute(address16_t ins)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Executing Opcode Instruction " << mName;
+            BOOST_LOG_TRIVIAL(debug) << "Executing Opcode Instruction " << mName << " Cycles: " << mCycles;
             BOOST_LOG_TRIVIAL(debug) << ins;
             mCommand();
             return mCycles;
@@ -35,49 +37,112 @@ namespace Opcode
 
     };
 
-namespace Commands
+struct Opcode
 {
+
+    Opcode();
+
+    std::map<uint16_t, OpcodeCommand> opcode_map;
+
     // 1. LD nn, n
-    void LdReadByte(register8_t* r1)
-    {
-        byte read = Cpu::GetByteFromPC();
-    }
+    void LdReadByte(register8_t* r1);
 
-    void LdWriteByte(register8_t* r1)
-    {
-        Cpu::WriteBytePC(r1->value());
-    }
+    void LdWriteByte(register8_t* r1);
 
+    void LdWriteWord(register16_t* r1);
 
+    void LdReadWord(register16_t* r1);
+
+    void Ld_HL(register8_t* r1);
 
     // 2. LD r1, r2
-    void LdR1R2(register8_t* r1, register8_t* r2)
-    {
-        BOOST_LOG_TRIVIAL(debug) << *r1;
-        BOOST_LOG_TRIVIAL(debug) << *r2;
-        *r1 = *r2;
-    }
+    void LdR1R2(register8_t* r1, register8_t* r2);
 
-    void AddA(register8_t* r1, register8_t* r2)
-    {
-        *r1 = r1->value() + r2->value();
-    }
+    void LdR1R2_16(register16_t* r1, register16_t* r2);
 
-    void Push(register16_t* r1)
-    {
-        Cpu::StackPush(*r1);
-    }
-}
+    // Add 8-bit
+    void AddA(register8_t* r1, register8_t* r2);
 
-    using namespace Registers;
-    using namespace Commands;
-    static std::map<unsigned short, OpcodeCommand> opcode_map =
-    {
+    void AddA_HL();
+
+    void AddA_PC();
+
+    // Adc 8-bit. Very redundant code but more explicit i guess
+    void AdcA(register8_t* r1, register8_t* r2);
+
+    void AdcA_HL();
+
+    void AdcA_PC();
+
+    // SubA
+    void SubA(register8_t* r1, register8_t* r2);
+
+    void SubA_HL();
+
+    void SubA_PC();
+
+    // SbcA
+    void SbcA(register8_t* r1, register8_t* r2);
+
+    void SbcA_HL();
+
+    void SbcA_PC();
+
+    void AndA(register8_t* r1, register8_t* r2);
+
+    void AndA_HL();
+
+    void AndA_PC();
+
+    void OrA(register8_t* r1, register8_t* r2);
+
+    void OrA_HL();
+
+    void OrA_PC();
+
+    void XorA(register8_t* r1, register8_t* r2);
+
+    void XorA_HL();
+
+    void XorA_PC();
+
+    void CpA(register8_t* r1, register8_t* r2);
+
+    void CpA_HL();
+
+    void CpA_PC();
+
+    void IncN(register8_t* r1);
+
+    void DecN(register8_t* r1);
+
+    // Add 16-bit
+    void AddHL(register16_t* r1, register16_t* r2);
+
+    void IncN16(register16_t* r1);
+
+    void DecN16(register16_t* r1);
+
+    void Swap(register8_t* r1);
+
+    void SwapHL();
+
+    void Push(register16_t* r1);
+
+    void Pop(register16_t* r1);
+
+    static std::shared_ptr<Opcode> Instance();
+
+    // =
+    //{
         // LD r1,r2
         // Put value r2 into r1
-        {0xF8, OpcodeCommand("LdR1R2->A:A", std::bind(&LdR1R2, &A, &A), 4)},
-        {0xF9, OpcodeCommand("LdR1R2->A:B", std::bind(&LdR1R2, &A, &B), 4)},
-    };
+      //  {0xF8, std::shared_ptr<OpcodeCommand>(new OpcodeCommand("LdR1R2->A:A", std::bind(&LdR1R2, Registers::A.get(), Registers::A.get()), 4))},
+      //  {0xF9, std::shared_ptr<OpcodeCommand>(new OpcodeCommand("LdR1R2->A:B", std::bind(&LdR1R2, Registers::A.get(), Registers::B.get()), 4))},
+    //};
+
 };
+
+
 }
 #endif

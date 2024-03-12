@@ -6,23 +6,22 @@
 namespace gbc
 {
 typedef unsigned char byte;
+
 namespace Utils
 {
-namespace Time
+
+struct Time
 {
-    uint64_t NowMilli()
+    Time()
     {
-        using namespace std::chrono;
-        return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
     }
 
-    uint64_t NowNano()
-    {
-        using namespace std::chrono;
-        return duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
-    }
+    static uint64_t NowMilli();
 
-}
+    static uint64_t NowNano();
+
+};
 
 }
 } 

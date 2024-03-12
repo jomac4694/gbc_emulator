@@ -3,7 +3,9 @@
 #include "Utils.h"
 #include <iostream>
 #include <boost/log/trivial.hpp>
-
+#include <iomanip>
+#include <sstream>
+#include <map>
 namespace gbc
 {
 
@@ -13,6 +15,10 @@ class Register
     public:
         T mValue;
 
+        Register() : mValue(0x0)
+        {
+
+        }
         Register(T val) : mValue(val)
         {
 
@@ -22,6 +28,7 @@ class Register
         {
 
         }
+
         std::string name() const { return mName;};
         
         T value() const { return mValue; };
@@ -72,6 +79,31 @@ class Register
 
         }
 
+        // Set bit at i starting from LSB
+        void SetBitLSB(byte i)
+        {
+            if (BitAtLSB(i))
+                return;
+            else
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Set bit " << (int) i << " in Register " << mName;
+                mValue = mValue | (0x0000000000000001 << i);
+            }
+        }
+
+        // Reset bit at i starting from LSB
+        void ResetBitLSB(byte i)
+        {
+            if (!BitAtLSB(i))
+                return;
+            else
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Reset bit " << (int) i << " in Register " << mName;
+                mValue = mValue ^ (0x0000000000000001 << i); 
+            }
+
+        }
+
         // Get High bits for the given type (ex. int is 32 bits so take high 32/2 = 16 bits)
         T High()
         {
@@ -88,7 +120,7 @@ class Register
             return ret;
         }
 
-        // Get the Nth nibble (4 bits), 0-indexed
+        // Get the Nth nibble (4 bits), 0-indexed left-to-right
         byte NibbleN(byte n)
         {
             byte start = n*4;
@@ -107,11 +139,37 @@ class Register
             return GetBits(start*4, (end*4 + 3));
         }
 
+        std::string Hex() const
+        {
+            std::stringstream ss;
+            ss << std::uppercase << std::hex << "0x";
+
+            for (int i = sizeof(T) - 1; i >= 0; i--)
+            {
+                ss << std::setw(2) << std::setfill('0') << (int) ((mValue >> i*8) & 0xFF);
+            }
+
+            return ss.str();
+        }
+
+        void AssignBitName(int32_t bit, const std::string& name)
+        {
+            if (bit > bits())
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Failed to assign bit name to bit " << bit;
+                BOOST_LOG_TRIVIAL(debug) << *this;
+                return;
+            }
+
+            mBitNameMap.insert({bit, name});
+        }
+        
         inline friend std::ostream &operator << (std::ostream &out, const Register<T>& reg)
         {
-            out << "Register " << reg.name() << " = ";
+            out << "Register " << reg.name() << " Binary: ";
             for (int i = 0; i < reg.bits() ; i++)
                 out << (uint64_t) reg.BitAtMSB(i) << " ";
+            out << "Hex: " << reg.Hex();
             return out;
         }
 
@@ -149,6 +207,7 @@ class Register
 
     protected:
         std::string mName;
+        std::map<int32_t, std::string> mBitNameMap;
 };
 
 
@@ -160,17 +219,17 @@ struct flag_register_t : Register<byte>
 
     } 
 
-    void SetZeroFlag(bool bit) { bit ? SetBit(0) : ResetBit(0); }
-    bool ZeroFlag() { return BitAtMSB(0); }
+    void SetZeroFlag(bool bit) { bit ? SetBitLSB(0) : ResetBitLSB(0); }
+    bool ZeroFlag() { return BitAtLSB(0); }
 
-    void SetSubtractFlag(bool bit) { bit ? SetBit(1) : ResetBit(1); }
-    bool SubtractFlag() { return BitAtMSB(1); }
+    void SetSubtractFlag(bool bit) { bit ? SetBitLSB(1) : ResetBitLSB(1); }
+    bool SubtractFlag() { return BitAtLSB(1); }
 
-    void SetHalfCarryFlag(bool bit) { bit ? SetBit(2) : ResetBit(2); }
-    bool HalfCarryFlag() { return BitAtMSB(2); }
+    void SetHalfCarryFlag(bool bit) { bit ? SetBitLSB(2) : ResetBitLSB(2); }
+    bool HalfCarryFlag() { return BitAtLSB(2); }
 
-    void SetCarryFlag(bool bit) { bit ? SetBit(3) : ResetBit(3); }
-    bool CarryFlag() { return BitAtMSB(3); }
+    void SetCarryFlag(bool bit) { bit ? SetBitLSB(3) : ResetBitLSB(3); }
+    bool CarryFlag() { return BitAtLSB(3); }
 
     
 };
