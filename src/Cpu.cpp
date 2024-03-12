@@ -60,7 +60,7 @@ namespace gbc
     }
 
     void Cpu::StackPush(register16_t value) { gbc::Ram::Instance()->WriteWord(PC, value, true); }
-    uint16_t Cpu::StackPop() { gbc::Ram::Instance()->ReadWord(PC); }
+    uint16_t Cpu::StackPop() { return gbc::Ram::Instance()->ReadWord(PC); }
 
     byte Cpu::GetByteFromPC() { return gbc::Ram::Instance()->ReadByte(PC); }
     uint16_t Cpu::GetWordFromPC() { return gbc::Ram::Instance()->ReadWord(PC); }

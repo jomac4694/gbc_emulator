@@ -53,7 +53,13 @@ struct Opcode
 
     void LdReadWord(register16_t* r1);
 
+    void Ld_A(register16_t* r1);
+
     void Ld_HL(register8_t* r1);
+
+    void Ld_HL_Write(register8_t* r1);
+
+    void Ld_HL_WritePC();
 
     // 2. LD r1, r2
     void LdR1R2(register8_t* r1, register8_t* r2);
@@ -118,6 +124,8 @@ struct Opcode
 
     // Add 16-bit
     void AddHL(register16_t* r1, register16_t* r2);
+
+    void AddSP();
 
     void IncN16(register16_t* r1);
 
