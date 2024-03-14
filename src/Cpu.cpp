@@ -36,8 +36,6 @@ namespace gbc
                  HL(0x0, "HL"),
                  FLAGS(0x0, "Flag Register")
     {
-
-
     }
 
     void Cpu::Execute()
@@ -59,14 +57,48 @@ namespace gbc
         }
     }
 
-    void Cpu::StackPush(register16_t value) { gbc::Ram::Instance()->WriteWord(PC, value, true); }
-    uint16_t Cpu::StackPop() { return gbc::Ram::Instance()->ReadWord(PC); }
+    void Cpu::StackPush(register16_t value)
+    {
+        gbc::Ram::Instance()->WriteWord(SP, value);
+        SP--;
+        SP--;
+    }
 
-    byte Cpu::GetByteFromPC() { return gbc::Ram::Instance()->ReadByte(PC); }
-    uint16_t Cpu::GetWordFromPC() { return gbc::Ram::Instance()->ReadWord(PC); }
+    uint16_t Cpu::StackPop()
+    {
+        uint16_t ret = gbc::Ram::Instance()->ReadWord(SP);
+        SP++;
+        SP++;
+        return ret;
+    }
 
-    void Cpu::WriteBytePC(register8_t value) { gbc::Ram::Instance()->WriteByte(PC, value); }
-    void Cpu::WriteWordPC(register16_t value) { gbc::Ram::Instance()->WriteWord(PC, value); }
+    byte Cpu::GetByteFromPC()
+    {
+        byte ret = gbc::Ram::Instance()->ReadByte(PC);
+        PC++;
+        return ret;
+    }
+
+    uint16_t Cpu::GetWordFromPC()
+    {
+        uint16_t ret = gbc::Ram::Instance()->ReadWord(PC);
+        PC++;
+        PC++;
+        return ret;
+    }
+
+    void Cpu::WriteBytePC(register8_t value)
+    {
+        gbc::Ram::Instance()->WriteByte(PC, value);
+        PC++;
+    }
+
+    void Cpu::WriteWordPC(register16_t value)
+    {
+        gbc::Ram::Instance()->WriteWord(PC, value);
+        PC++;
+        PC++;
+    }
 
     std::shared_ptr<Cpu> Cpu::Instance()
     {

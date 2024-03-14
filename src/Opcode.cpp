@@ -285,6 +285,7 @@ namespace gbc
                 // RETI
                 {0xD9, OpcodeCommand("RETI", std::bind(&Opcode::RetI, this), 8)},
 
+                // Test bit b in register r
                 {0xCB40, OpcodeCommand(" BitBR 0:b", std::bind(&Opcode::BitBR, this, 0, &(CPU->B)), 8)},
                 {0xCB41, OpcodeCommand(" BitBR 0:c", std::bind(&Opcode::BitBR, this, 0, &(CPU->C)), 8)},
                 {0xCB42, OpcodeCommand(" BitBR 0:d", std::bind(&Opcode::BitBR, this, 0, &(CPU->D)), 8)},
@@ -349,6 +350,8 @@ namespace gbc
                 {0xCB7D, OpcodeCommand(" BitBR 7:l", std::bind(&Opcode::BitBR, this, 7, &(CPU->L)), 8)},
                 {0xCB7E, OpcodeCommand(" BitBR 7:hl", std::bind(&Opcode::BitBR_HL, this, 7), 16)},
                 {0xCB7F, OpcodeCommand(" BitBR 7:a", std::bind(&Opcode::BitBR, this, 7, &(CPU->A)), 8)},
+
+                // Reset bit b in register r
                 {0xCB80, OpcodeCommand(" ResBR 0:b", std::bind(&Opcode::ResBR, this, 0, &(CPU->B)), 8)},
                 {0xCB81, OpcodeCommand(" ResBR 0:c", std::bind(&Opcode::ResBR, this, 0, &(CPU->C)), 8)},
                 {0xCB82, OpcodeCommand(" ResBR 0:d", std::bind(&Opcode::ResBR, this, 0, &(CPU->D)), 8)},
@@ -413,6 +416,7 @@ namespace gbc
                 {0xCBBD, OpcodeCommand(" ResBR 7:l", std::bind(&Opcode::ResBR, this, 7, &(CPU->L)), 8)},
                 {0xCBBE, OpcodeCommand(" ResBR 7:hl", std::bind(&Opcode::ResBR_HL, this, 7), 16)},
                 {0xCBBF, OpcodeCommand(" ResBR 7:a", std::bind(&Opcode::ResBR, this, 7, &(CPU->A)), 8)},
+                // Set bit b in register r
                 {0xCBC0, OpcodeCommand(" SetBR 0:b", std::bind(&Opcode::SetBR, this, 0, &(CPU->B)), 8)},
                 {0xCBC1, OpcodeCommand(" SetBR 0:c", std::bind(&Opcode::SetBR, this, 0, &(CPU->C)), 8)},
                 {0xCBC2, OpcodeCommand(" SetBR 0:d", std::bind(&Opcode::SetBR, this, 0, &(CPU->D)), 8)},
@@ -477,7 +481,7 @@ namespace gbc
                 {0xCBFD, OpcodeCommand(" SetBR 7:l", std::bind(&Opcode::SetBR, this, 7, &(CPU->L)), 8)},
                 {0xCBFE, OpcodeCommand(" SetBR 7:hl", std::bind(&Opcode::SetBR_HL, this, 7), 16)},
                 {0xCBFF, OpcodeCommand(" SetBR 7:a", std::bind(&Opcode::SetBR, this, 7, &(CPU->A)), 8)},
-
+                // rotate register r left
                 {0xCB00, OpcodeCommand(" RlcA b", std::bind(&Opcode::RlcA, this, &(CPU->B)), 8)},
                 {0xCB01, OpcodeCommand(" RlcA c", std::bind(&Opcode::RlcA, this, &(CPU->C)), 8)},
                 {0xCB02, OpcodeCommand(" RlcA d", std::bind(&Opcode::RlcA, this, &(CPU->D)), 8)},
@@ -486,6 +490,7 @@ namespace gbc
                 {0xCB05, OpcodeCommand(" RlcA l", std::bind(&Opcode::RlcA, this, &(CPU->L)), 8)},
                 {0xCB06, OpcodeCommand(" RlcA hl", std::bind(&Opcode::RlcA_HL, this), 16)},
                 {0xCB07, OpcodeCommand(" RlcA a", std::bind(&Opcode::RlcA, this, &(CPU->A)), 8)},
+                // rotate register r right
                 {0xCB08, OpcodeCommand(" RrcA b", std::bind(&Opcode::RrcA, this, &(CPU->B)), 8)},
                 {0xCB09, OpcodeCommand(" RrcA c", std::bind(&Opcode::RrcA, this, &(CPU->C)), 8)},
                 {0xCB0A, OpcodeCommand(" RrcA d", std::bind(&Opcode::RrcA, this, &(CPU->D)), 8)},
@@ -494,6 +499,7 @@ namespace gbc
                 {0xCB0D, OpcodeCommand(" RrcA l", std::bind(&Opcode::RrcA, this, &(CPU->L)), 8)},
                 {0xCB0E, OpcodeCommand(" RrcA hl", std::bind(&Opcode::RrcA_HL, this), 16)},
                 {0xCB0F, OpcodeCommand(" RrcA a", std::bind(&Opcode::RrcA, this, &(CPU->A)), 8)},
+                // rotate left
                 {0xCB10, OpcodeCommand(" Rla b", std::bind(&Opcode::Rla, this, &(CPU->B)), 8)},
                 {0xCB11, OpcodeCommand(" Rla c", std::bind(&Opcode::Rla, this, &(CPU->C)), 8)},
                 {0xCB12, OpcodeCommand(" Rla d", std::bind(&Opcode::Rla, this, &(CPU->D)), 8)},
@@ -502,6 +508,7 @@ namespace gbc
                 {0xCB15, OpcodeCommand(" Rla l", std::bind(&Opcode::Rla, this, &(CPU->L)), 8)},
                 {0xCB16, OpcodeCommand(" Rla hl", std::bind(&Opcode::Rla_HL, this), 16)},
                 {0xCB17, OpcodeCommand(" Rla a", std::bind(&Opcode::Rla, this, &(CPU->A)), 8)},
+                // rotate right
                 {0xCB18, OpcodeCommand(" RrA b", std::bind(&Opcode::RrA, this, &(CPU->B)), 8)},
                 {0xCB19, OpcodeCommand(" RrA c", std::bind(&Opcode::RrA, this, &(CPU->C)), 8)},
                 {0xCB1A, OpcodeCommand(" RrA d", std::bind(&Opcode::RrA, this, &(CPU->D)), 8)},
@@ -510,6 +517,7 @@ namespace gbc
                 {0xCB1D, OpcodeCommand(" RrA l", std::bind(&Opcode::RrA, this, &(CPU->L)), 8)},
                 {0xCB1E, OpcodeCommand(" RrA hl", std::bind(&Opcode::RrA_HL, this), 16)},
                 {0xCB1F, OpcodeCommand(" RrA a", std::bind(&Opcode::RrA, this, &(CPU->A)), 8)},
+                // shift left
                 {0xCB20, OpcodeCommand(" Sla b", std::bind(&Opcode::Sla, this, &(CPU->B)), 8)},
                 {0xCB21, OpcodeCommand(" Sla c", std::bind(&Opcode::Sla, this, &(CPU->C)), 8)},
                 {0xCB22, OpcodeCommand(" Sla d", std::bind(&Opcode::Sla, this, &(CPU->D)), 8)},
@@ -518,6 +526,7 @@ namespace gbc
                 {0xCB25, OpcodeCommand(" Sla l", std::bind(&Opcode::Sla, this, &(CPU->L)), 8)},
                 {0xCB26, OpcodeCommand(" Sla hl", std::bind(&Opcode::Sla_HL, this), 16)},
                 {0xCB27, OpcodeCommand(" Sla a", std::bind(&Opcode::Sla, this, &(CPU->A)), 8)},
+                // shift right
                 {0xCB28, OpcodeCommand(" Sra b", std::bind(&Opcode::Sra, this, &(CPU->B)), 8)},
                 {0xCB29, OpcodeCommand(" Sra c", std::bind(&Opcode::Sra, this, &(CPU->C)), 8)},
                 {0xCB2A, OpcodeCommand(" Sra d", std::bind(&Opcode::Sra, this, &(CPU->D)), 8)},
@@ -526,6 +535,7 @@ namespace gbc
                 {0xCB2D, OpcodeCommand(" Sra l", std::bind(&Opcode::Sra, this, &(CPU->L)), 8)},
                 {0xCB2E, OpcodeCommand(" Sra hl", std::bind(&Opcode::Sra_HL, this), 16)},
                 {0xCB2F, OpcodeCommand(" Sra a", std::bind(&Opcode::Sra, this, &(CPU->A)), 8)},
+                // shift left
                 {0xCB38, OpcodeCommand(" Srl b", std::bind(&Opcode::Srl, this, &(CPU->B)), 8)},
                 {0xCB39, OpcodeCommand(" Srl c", std::bind(&Opcode::Srl, this, &(CPU->C)), 8)},
                 {0xCB3A, OpcodeCommand(" Srl d", std::bind(&Opcode::Srl, this, &(CPU->D)), 8)},

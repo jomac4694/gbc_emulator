@@ -54,15 +54,15 @@ namespace gbc
         byte ReadByte(uint16_t address);
 
         // Handles increments
-        byte ReadByte(address16_t &address);
+        byte ReadByte(address16_t address);
 
-        uint16_t ReadWord(address16_t &address);
+        uint16_t ReadWord(address16_t address);
 
         void WriteByte(uint16_t address, register8_t val);
 
-        void WriteByte(address16_t &address, register8_t val, bool sp = false);
+        void WriteByte(address16_t address, register8_t val);
 
-        void WriteWord(address16_t &address, register16_t value, bool sp = false);
+        void WriteWord(address16_t address, register16_t value);
 
         static std::shared_ptr<Ram> Instance();
     private:
