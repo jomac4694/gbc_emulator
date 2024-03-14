@@ -5,7 +5,7 @@
 #include <Logger.h>
 #include <ctime>
 #include "boost/date_time/local_time/local_time.hpp"
-
+#include "Opcode.h"
 #include "Cpu.h"
 //#include "Cpu.h"
 
@@ -169,6 +169,22 @@ int main()
     reg.ResetBitLSB(7);
     BOOST_LOG_TRIVIAL(debug) << reg; 
     
+    for (auto const& o : Opcode::Instance()->opcode_map)
+    {
+        auto e = o.second;
+        address16_t t = 0xFFFF;
+        e.Execute(t);
+    }
+/*
+   Cpu::Instance()->FLAGS.SetCarryFlag(true);
+   Cpu::Instance()->Execute();
+      Cpu::Instance()->FLAGS.SetCarryFlag(false);
+   Cpu::Instance()->Execute();
+      Cpu::Instance()->FLAGS.SetCarryFlag(true);
+   Cpu::Instance()->Execute();
+      Cpu::Instance()->FLAGS.SetCarryFlag(false);
+   Cpu::Instance()->Execute();
+*/
 
     
     //Logger log;

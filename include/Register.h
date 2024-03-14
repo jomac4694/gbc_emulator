@@ -61,7 +61,7 @@ class Register
                 return;
             else
             {
-                BOOST_LOG_TRIVIAL(debug) << "Set bit " << (int) i << " in Register " << mName;
+                BOOST_LOG_TRIVIAL(debug) << "Set bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
                 mValue = mValue | (0x0000000000000001 << (bits() - i - 1));
             }
         }
@@ -86,9 +86,14 @@ class Register
                 return;
             else
             {
-                BOOST_LOG_TRIVIAL(debug) << "Set bit " << (int) i << " in Register " << mName;
+                BOOST_LOG_TRIVIAL(debug) << "Set bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
                 mValue = mValue | (0x0000000000000001 << i);
             }
+        }
+
+        void SetBitLSB(byte i, bool bit)
+        {
+             bit ? SetBitLSB(i) : ResetBitLSB(i); 
         }
 
         // Reset bit at i starting from LSB
@@ -98,7 +103,7 @@ class Register
                 return;
             else
             {
-                BOOST_LOG_TRIVIAL(debug) << "Reset bit " << (int) i << " in Register " << mName;
+                BOOST_LOG_TRIVIAL(debug) << "Reset bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
                 mValue = mValue ^ (0x0000000000000001 << i); 
             }
 
@@ -216,7 +221,10 @@ struct flag_register_t : Register<byte>
 {
     flag_register_t(byte val, std::string name) : Register(val, name)
     {
-
+        AssignBitName(0, "ZeroFlag");
+        AssignBitName(1, "SubtractFlag");
+        AssignBitName(2, "HalfCarryFlag");
+        AssignBitName(3, "CarryFlag");
     } 
 
     void SetZeroFlag(bool bit) { bit ? SetBitLSB(0) : ResetBitLSB(0); }

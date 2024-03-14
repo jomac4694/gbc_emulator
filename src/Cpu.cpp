@@ -42,9 +42,9 @@ namespace gbc
 
     void Cpu::Execute()
     {
-        address16_t next_instruction = 0x8000;
+        address16_t next_instruction = 0xCB99;
         std::cout << "nibs=" << (uint16_t)next_instruction.GetNibbles(0, 1) << std::endl;
-        auto itr = Opcode::Instance()->opcode_map.find((uint16_t)next_instruction.GetNibbles(0, 1));
+        auto itr = Opcode::Instance()->opcode_map.find((uint16_t)next_instruction.GetNibbles(0, 3));
         if (itr != Opcode::Instance()->opcode_map.end())
         {
             BOOST_LOG_TRIVIAL(debug) << "Found instruction";

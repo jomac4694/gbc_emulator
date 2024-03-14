@@ -30,7 +30,7 @@ namespace gbc
         int Execute(address16_t ins)
         {
             BOOST_LOG_TRIVIAL(debug) << "Executing Opcode Instruction " << mName << " Cycles: " << mCycles;
-            BOOST_LOG_TRIVIAL(debug) << ins;
+         //   BOOST_LOG_TRIVIAL(debug) << ins;
             mCommand();
             return mCycles;
         }
@@ -138,6 +138,84 @@ struct Opcode
     void Push(register16_t* r1);
 
     void Pop(register16_t* r1);
+
+    void DAA();
+
+    void CCF();
+
+    void SCF();
+
+    void NOP();
+
+    void HALT();
+
+    void STOP();
+
+    void DI();
+
+    void EI();
+
+    void RlcA(register8_t* r1);
+
+    void RrcA(register8_t* r1);
+
+    void Rla(register8_t* r1);
+
+    void RrA(register8_t* r1);
+
+    void Sla(register8_t* r1);
+
+    void Sra(register8_t* r1);
+
+    void Srl(register8_t* r1);
+
+    void RlcA_HL();
+
+    void RrcA_HL();
+
+    void Rla_HL();
+
+    void RrA_HL();
+
+    void Sla_HL();
+
+    void Sra_HL();
+
+    void Srl_HL();
+
+    void JpNN();
+
+    void JpCCNN(std::function<bool()> bit);
+
+    void JpHL();
+
+    void JrN();
+
+    void JrCCN(std::function<bool()> bit);
+
+    void CallNN();
+
+    void CallCCNN(std::function<bool()> bit);
+
+    void Rst(uint8_t address);
+
+    void Ret();
+
+    void RetCC(std::function<bool()> bit);
+
+    void RetI();
+
+    void BitBR(byte b, register8_t* r1);
+
+    void BitBR_HL(byte b);
+
+    void SetBR(byte b, register8_t* r1);
+
+    void SetBR_HL(byte b);
+
+    void ResBR(byte b, register8_t* r1);
+
+    void ResBR_HL(byte b);
 
     static std::shared_ptr<Opcode> Instance();
 
