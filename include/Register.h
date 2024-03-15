@@ -21,7 +21,7 @@ class Register
         }
         Register(T val) : mValue(val)
         {
-
+            
         }
 
         Register(T val, std::string name) : mValue(val), mName(name)
@@ -29,6 +29,11 @@ class Register
 
         }
 
+        void Set(T val)
+        {
+            BOOST_LOG_TRIVIAL(debug) << "Setting value in Register " << mName << " from " << Hex() << " to " << Hex<T>(val);
+            mValue = val;
+        }
         std::string name() const { return mName;};
         
         T value() const { return mValue; };
@@ -152,6 +157,20 @@ class Register
             for (int i = sizeof(T) - 1; i >= 0; i--)
             {
                 ss << std::setw(2) << std::setfill('0') << (int) ((mValue >> i*8) & 0xFF);
+            }
+
+            return ss.str();
+        }
+
+        template<typename U>
+        static std::string Hex(U value)
+        {
+            std::stringstream ss;
+            ss << std::uppercase << std::hex << "0x";
+
+            for (int i = sizeof(U) - 1; i >= 0; i--)
+            {
+                ss << std::setw(2) << std::setfill('0') << (int) ((value >> i*8) & 0xFF);
             }
 
             return ss.str();

@@ -172,7 +172,7 @@ int main()
     for (auto const& o : Opcode::Instance()->opcode_map)
     {
         auto e = o.second;
-        address16_t t = 0xFFFF;
+        address16_t t = o.first;
         e.Execute(t);
     }
 /*

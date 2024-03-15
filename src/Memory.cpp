@@ -7,7 +7,10 @@ namespace gbc
 
     Ram::Ram()
     {
-        mMemory = {0};
+        for (int i = 0; i < mMemory.size(); i ++)
+        {
+            mMemory[i] = 0xFB;
+;        }
     }
 
    // Does not increment

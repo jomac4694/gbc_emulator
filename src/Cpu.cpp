@@ -20,27 +20,27 @@ namespace gbc
     }
     */
 
-    Cpu::Cpu() : A(0x0, "A"),
-                 B(0x0, "B"),
-                 C(0x0, "C"),
-                 D(0x0, "D"),
-                 E(0x0, "E"),
-                 F(0x0, "F"),
-                 H(0x0, "H"),
-                 L(0x0, "L"),
+    Cpu::Cpu() : A(0xAA, "A"),
+                 B(0xAC, "B"),
+                 C(0xAD, "C"),
+                 D(0xFF, "D"),
+                 E(0xCD, "E"),
+                 F(0xDE, "F"),
+                 H(0xDE, "H"),
+                 L(0xAF, "L"),
                  PC(0x100, "Program Counter"),
                  SP(0xFFFE, "Stack Pointer"),
-                 AF(0x0, "AF"),
-                 BC(0x0, "BC"),
-                 DE(0x0, "DE"),
-                 HL(0x0, "HL"),
+                 AF(0xFFFF, "AF"),
+                 BC(0xFBFB, "BC"),
+                 DE(0xBFBF, "DE"),
+                 HL(0xFFFF, "HL"),
                  FLAGS(0x0, "Flag Register")
     {
     }
 
     void Cpu::Execute()
     {
-        address16_t next_instruction = 0xCB99;
+        address16_t next_instruction = address16_t(GetWordFromPC(), "Instruction");
         std::cout << "nibs=" << (uint16_t)next_instruction.GetNibbles(0, 1) << std::endl;
         auto itr = Opcode::Instance()->opcode_map.find((uint16_t)next_instruction.GetNibbles(0, 3));
         if (itr != Opcode::Instance()->opcode_map.end())
@@ -53,7 +53,7 @@ namespace gbc
         }
         else
         {
-            BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function" << std::endl;
+            BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function for " << next_instruction << std::endl;
         }
     }
 

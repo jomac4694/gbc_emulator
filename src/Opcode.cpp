@@ -579,7 +579,7 @@ namespace gbc
     void Opcode::Ld_HL(register8_t *r1)
     {
         byte read = gbc::Ram::Instance()->ReadByte(CPU->HL.value());
-        *r1 = read;
+        r1->Set(read);
     }
 
     void Opcode::Ld_HL_Write(register8_t *r1)
@@ -595,21 +595,23 @@ namespace gbc
     // 2. LD r1, r2
     void Opcode::LdR1R2(register8_t *r1, register8_t *r2)
     {
-        r1->mValue = r2->mValue;
-        BOOST_LOG_TRIVIAL(debug) << r1;
-        BOOST_LOG_TRIVIAL(debug) << r2;
+        r1->Set( r2->mValue);
+        BOOST_LOG_TRIVIAL(debug) << *r1;
+        BOOST_LOG_TRIVIAL(debug) << *r2;
     }
 
     void Opcode::LdR1R2_16(register16_t *r1, register16_t *r2)
     {
-        r1->mValue = r2->mValue;
-        BOOST_LOG_TRIVIAL(debug) << r1;
-        BOOST_LOG_TRIVIAL(debug) << r2;
+        r1->Set( r2->mValue);
+        BOOST_LOG_TRIVIAL(debug) << *r1;
+        BOOST_LOG_TRIVIAL(debug) << *r2;
     }
 
     // Add 8-bit
     void Opcode::AddA(register8_t *r1, register8_t *r2)
     {
+        BOOST_LOG_TRIVIAL(debug) << *r1;
+        BOOST_LOG_TRIVIAL(debug) << *r2;
         uint32_t result = r1->value() + r2->value();
 
         CPU->FLAGS.SetZeroFlag(result == 0x0);
@@ -617,7 +619,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag((0xF & r1->value()) + (0xF & r2->value()) > 0xF);
         CPU->FLAGS.SetCarryFlag((result & 0x100) != 0);
 
-        r1->mValue = static_cast<byte>(result);
+        r1->Set( static_cast<byte>(result));
     }
 
     void Opcode::AddA_HL()
@@ -642,7 +644,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag((0xF & r1->value()) + (0xF & r2->value() + CPU->FLAGS.CarryFlag()) > 0xF);
         CPU->FLAGS.SetCarryFlag((result & 0x100) != 0);
 
-        r1->mValue = static_cast<byte>(result);
+        r1->Set( static_cast<byte>(result));
     }
 
     void Opcode::AdcA_HL()
@@ -667,7 +669,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag(((0xF & r1->value()) - (0xF & r2->value())) < 0);
         CPU->FLAGS.SetCarryFlag(r1->value() < r2->value());
 
-        r1->mValue = result;
+        r1->Set( result);
     }
 
     void Opcode::SubA_HL()
@@ -689,10 +691,10 @@ namespace gbc
 
         CPU->FLAGS.SetZeroFlag(result == 0x0);
         CPU->FLAGS.SetSubtractFlag(true);
-        CPU->FLAGS.SetHalfCarryFlag((0xF & r1->value()) - (0xF & r2->value()) - CPU->FLAGS.CarryFlag() < 0);
-        CPU->FLAGS.SetCarryFlag(r1->value() < r2->value());
+        CPU->FLAGS.SetHalfCarryFlag((result & 0xF) < 0);
+        CPU->FLAGS.SetCarryFlag(result < 0);
 
-        r1->mValue = result;
+        r1->Set( result);
     }
 
     void Opcode::SbcA_HL()
@@ -716,7 +718,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag(true);
         CPU->FLAGS.SetCarryFlag(false);
 
-        r1->mValue = result;
+        r1->Set( result);
     }
 
     void Opcode::AndA_HL()
@@ -740,7 +742,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag(false);
         CPU->FLAGS.SetCarryFlag(false);
 
-        r1->mValue = result;
+        r1->Set( result);
     }
 
     void Opcode::OrA_HL()
@@ -764,7 +766,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag(false);
         CPU->FLAGS.SetCarryFlag(false);
 
-        r1->mValue = result;
+        r1->Set( result);
     }
 
     void Opcode::XorA_HL()
@@ -827,7 +829,7 @@ namespace gbc
         CPU->FLAGS.SetHalfCarryFlag((0xFFF & r1->value()) + (0xFFF & r2->value()) > 0xFFF);
         CPU->FLAGS.SetCarryFlag((result & 0x10000) != 0);
 
-        r1->mValue = static_cast<uint16_t>(result);
+        r1->Set( static_cast<uint16_t>(result));
     }
 
     void Opcode::AddSP()
@@ -857,7 +859,7 @@ namespace gbc
     {
         byte high = r1->High();
         byte low = r1->Low();
-        r1->mValue = (low << 4) | high;
+        r1->Set( (low << 4) | high);
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
         CPU->FLAGS.SetHalfCarryFlag(false);
@@ -879,7 +881,7 @@ namespace gbc
     void Opcode::Pop(register16_t *r1)
     {
         uint16_t read = CPU->StackPop();
-        r1->mValue = read;
+        r1->Set( read);
     }
     // binary coded decimal conversion
     void Opcode::DAA()
@@ -946,7 +948,7 @@ namespace gbc
     void Opcode::RlcA(register8_t *r1)
     {
         bool bit_7 = r1->BitAtLSB(7);
-        r1->mValue = (CPU->A.value() << 1) | bit_7;
+        r1->Set( (CPU->A.value() << 1) | bit_7);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
@@ -958,7 +960,7 @@ namespace gbc
     {
         bool carry = CPU->FLAGS.CarryFlag();
         bool bit_7 = r1->BitAtLSB(7);
-        r1->mValue = (r1->value() << 1) | carry;
+        r1->Set( (r1->value() << 1) | carry);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
@@ -969,7 +971,7 @@ namespace gbc
     void Opcode::RrcA(register8_t *r1)
     {
         bool bit_0 = r1->BitAtLSB(0);
-        r1->mValue = (r1->value() >> 1) | (bit_0 << 7);
+        r1->Set( (r1->value() >> 1) | (bit_0 << 7));
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
@@ -981,7 +983,7 @@ namespace gbc
     {
         bool carry = CPU->FLAGS.CarryFlag();
         bool bit_0 = r1->BitAtLSB(0);
-        r1->mValue = (r1->value() >> 1) | (carry << 7);
+        r1->Set( (r1->value() >> 1) | (carry << 7));
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
@@ -993,7 +995,7 @@ namespace gbc
     {
 
         bool bit_7 = r1->BitAtLSB(7);
-        r1->mValue = r1->value() << 1;
+        r1->Set( r1->value() << 1);
         r1->SetBitLSB(0, false);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
@@ -1006,7 +1008,7 @@ namespace gbc
     {
         bool bit_0 = r1->BitAtLSB(0);
         bool msb = r1->BitAtLSB(7);
-        r1->mValue = r1->value() >> 1;
+        r1->Set( r1->value() >> 1);
         r1->SetBitLSB(7, msb);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
@@ -1019,7 +1021,7 @@ namespace gbc
     {
         bool bit_0 = r1->BitAtLSB(0);
         bool msb = r1->BitAtLSB(7);
-        r1->mValue = r1->value() >> 1;
+        r1->Set( r1->value() >> 1);
         r1->SetBitLSB(7, false);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);

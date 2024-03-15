@@ -29,7 +29,7 @@ namespace gbc
 
         int Execute(address16_t ins)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Executing Opcode Instruction " << mName << " Cycles: " << mCycles;
+            BOOST_LOG_TRIVIAL(debug) << ins.Hex() << " Executing Opcode Instruction " << mName << " Cycles: " << mCycles;
          //   BOOST_LOG_TRIVIAL(debug) << ins;
             mCommand();
             return mCycles;
