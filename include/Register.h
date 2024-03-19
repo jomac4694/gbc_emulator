@@ -234,6 +234,38 @@ class Register
         std::map<int32_t, std::string> mBitNameMap;
 };
 
+typedef Register<byte> register8_t;
+typedef Register<uint16_t> register16_t;
+typedef Register<uint32_t> register32_t;
+typedef Register<uint16_t> address16_t;
+
+struct Register16
+{
+    public:
+
+        Register16(register8_t* high, register8_t* low) :
+            mHigh(high),
+            mLow(low)
+            {
+
+            }
+        void Set(uint16_t val)
+        { 
+            register16_t tmp(val);
+            mHigh->Set(tmp.High());
+            mLow->Set(tmp.Low());
+        }
+
+        uint16_t value()
+        {
+            return (mHigh->value() << 8) | mLow->value();
+        }
+
+    private:
+        register8_t* mHigh;
+        register8_t* mLow;
+};
+
 
 // Specialization for flag register
 struct flag_register_t : Register<byte>
@@ -261,10 +293,7 @@ struct flag_register_t : Register<byte>
     
 };
 
-typedef Register<byte> register8_t;
-typedef Register<uint16_t> register16_t;
-typedef Register<uint32_t> register32_t;
-typedef Register<uint16_t> address16_t;
+
 
 }
 #endif

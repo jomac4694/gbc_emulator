@@ -9,7 +9,7 @@ namespace gbc
     {
         for (int i = 0; i < mMemory.size(); i ++)
         {
-            mMemory[i] = 0xFB;
+            mMemory[i] = 0x00;
 ;        }
     }
 
