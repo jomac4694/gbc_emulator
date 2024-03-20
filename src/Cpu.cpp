@@ -38,23 +38,42 @@ namespace gbc
     {
     }
 
-    void Cpu::Execute(address16_t next_instruction)
+    void Cpu::Execute()
     {
-        //address16_t next_instruction = address16_t(GetWordFromPC(), "Instruction");
-        std::cout << "nibs=" << (uint16_t)next_instruction.GetNibbles(0, 1) << std::endl;
-        auto itr = Opcode::Instance()->opcode_map.find((uint16_t)next_instruction.GetNibbles(0, 3));
-        if (itr != Opcode::Instance()->opcode_map.end())
+        byte next_byte = GetByteFromPC();
+        
+        if (next_byte == 0xCB)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Found instruction";
-            auto cmd = itr->second;
-            std::cout << (int)itr->first << std::endl;
-            std::cout << "executing" << std::endl;
-            cmd.Execute(next_instruction);
+            next_byte = GetByteFromPC();
+            address16_t next_instruction = address16_t((0xCB << 8) | next_byte, "CB Instruction");
+            auto itr = Opcode::Instance()->opcode_map.find(next_instruction.value());
+            if (itr != Opcode::Instance()->opcode_map.end())
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Found CB instruction";
+                auto cmd = itr->second;
+                cmd.Execute(next_instruction);
+            }
+            else
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function for " << next_instruction << std::endl;
+            }
         }
         else
         {
-            BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function for " << next_instruction << std::endl;
+            auto itr = Opcode::Instance()->opcode_map.find(next_byte);
+            address16_t next_instruction = address16_t(next_byte, "Instruction");
+            if (itr != Opcode::Instance()->opcode_map.end())
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Found instruction";
+                auto cmd = itr->second;
+                cmd.Execute(next_instruction);
+            }
+            else
+            {
+                BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function for " << next_instruction << std::endl;
+            }
         }
+
     }
 
     void Cpu::StackPush(register16_t value)

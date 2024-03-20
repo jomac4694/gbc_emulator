@@ -614,7 +614,7 @@ namespace gbc
         BOOST_LOG_TRIVIAL(debug) << *r2;
         uint32_t result = r1->value() + r2->value();
 
-        CPU->FLAGS.SetZeroFlag(result == 0x0);
+        CPU->FLAGS.SetZeroFlag((byte) result == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
         CPU->FLAGS.SetHalfCarryFlag((0xF & r1->value()) + (0xF & r2->value()) > 0xF);
         CPU->FLAGS.SetCarryFlag((result & 0x100) != 0);
@@ -639,9 +639,9 @@ namespace gbc
     {
         uint32_t result = r1->value() + r2->value() + CPU->FLAGS.CarryFlag();
 
-        CPU->FLAGS.SetZeroFlag(result == 0x0);
+        CPU->FLAGS.SetZeroFlag((byte) result == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
-        CPU->FLAGS.SetHalfCarryFlag((0xF & r1->value()) + (0xF & r2->value() + CPU->FLAGS.CarryFlag()) > 0xF);
+        CPU->FLAGS.SetHalfCarryFlag( ((0xF & r1->value()) + (0xF & r2->value()) + CPU->FLAGS.CarryFlag() > 0xF));
         CPU->FLAGS.SetCarryFlag((result & 0x100) != 0);
 
         r1->Set( static_cast<byte>(result));
@@ -687,14 +687,14 @@ namespace gbc
     // SbcA
     void Opcode::SbcA(register8_t *r1, register8_t *r2)
     {
-        byte result = r1->value() - r2->value() - CPU->FLAGS.CarryFlag();
+        int8_t result = r1->value() - r2->value() - CPU->FLAGS.CarryFlag();
 
         CPU->FLAGS.SetZeroFlag(result == 0x0);
         CPU->FLAGS.SetSubtractFlag(true);
-        CPU->FLAGS.SetHalfCarryFlag((result & 0xF) < 0);
+        CPU->FLAGS.SetHalfCarryFlag( (result & 0x10) != 0);
         CPU->FLAGS.SetCarryFlag(result < 0);
 
-        r1->Set( result);
+        r1->Set( static_cast<byte>(result));
     }
 
     void Opcode::SbcA_HL()

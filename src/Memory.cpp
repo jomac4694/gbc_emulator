@@ -53,6 +53,14 @@ namespace gbc
         WriteByte(address, register8_t(value.Low()));
     }
 
+    void Ram::ClearMem()
+    {
+        for (int i = 0; i < mMemory.size(); i ++)
+        {
+            mMemory[i] = 0x00;
+;       }
+    }
+
     std::shared_ptr<Ram> Ram::Instance()
     {
         static std::shared_ptr<Ram> inst = std::make_shared<Ram>(Ram());

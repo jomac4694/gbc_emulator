@@ -64,7 +64,11 @@ namespace gbc
 
         void WriteWord(address16_t address, register16_t value);
 
+        void ClearMem();
+
         static std::shared_ptr<Ram> Instance();
+
+        
     private:
         std::array<byte, 0xFFFF> mMemory;
 

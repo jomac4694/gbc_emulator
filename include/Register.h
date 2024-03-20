@@ -88,7 +88,10 @@ class Register
         void SetBitLSB(byte i)
         {
             if (BitAtLSB(i))
+            {
+                BOOST_LOG_TRIVIAL(debug) << "NOT Setting bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
                 return;
+            }
             else
             {
                 BOOST_LOG_TRIVIAL(debug) << "Set bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
@@ -105,7 +108,10 @@ class Register
         void ResetBitLSB(byte i)
         {
             if (!BitAtLSB(i))
+            {
+                BOOST_LOG_TRIVIAL(debug) << "NOT Resetting bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
                 return;
+            }
             else
             {
                 BOOST_LOG_TRIVIAL(debug) << "Reset bit " << ((mBitNameMap.find(i) == mBitNameMap.end()) ? std::to_string(i) : mBitNameMap[i]) << " in Register " << mName;
@@ -272,23 +278,23 @@ struct flag_register_t : Register<byte>
 {
     flag_register_t(byte val, std::string name) : Register(val, name)
     {
-        AssignBitName(0, "ZeroFlag");
-        AssignBitName(1, "SubtractFlag");
-        AssignBitName(2, "HalfCarryFlag");
-        AssignBitName(3, "CarryFlag");
+        AssignBitName(7, "ZeroFlag");
+        AssignBitName(6, "SubtractFlag");
+        AssignBitName(5, "HalfCarryFlag");
+        AssignBitName(4, "CarryFlag");
     } 
 
-    void SetZeroFlag(bool bit) { bit ? SetBitLSB(0) : ResetBitLSB(0); }
-    bool ZeroFlag() { return BitAtLSB(0); }
+    void SetZeroFlag(bool bit) { bit ? SetBitLSB(7) : ResetBitLSB(7); }
+    bool ZeroFlag() { return BitAtLSB(7); }
 
-    void SetSubtractFlag(bool bit) { bit ? SetBitLSB(1) : ResetBitLSB(1); }
-    bool SubtractFlag() { return BitAtLSB(1); }
+    void SetSubtractFlag(bool bit) { bit ? SetBitLSB(6) : ResetBitLSB(6); }
+    bool SubtractFlag() { return BitAtLSB(6); }
 
-    void SetHalfCarryFlag(bool bit) { bit ? SetBitLSB(2) : ResetBitLSB(2); }
-    bool HalfCarryFlag() { return BitAtLSB(2); }
+    void SetHalfCarryFlag(bool bit) { bit ? SetBitLSB(5) : ResetBitLSB(5); }
+    bool HalfCarryFlag() { return BitAtLSB(5); }
 
-    void SetCarryFlag(bool bit) { bit ? SetBitLSB(3) : ResetBitLSB(3); }
-    bool CarryFlag() { return BitAtLSB(3); }
+    void SetCarryFlag(bool bit) { bit ? SetBitLSB(4) : ResetBitLSB(4); }
+    bool CarryFlag() { return BitAtLSB(4); }
 
     
 };

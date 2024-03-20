@@ -58,7 +58,7 @@ class Cpu
 public:
     Cpu();
 
-    void Execute(address16_t next_instruction);
+    void Execute();
 
     void StackPush(register16_t value);
     uint16_t StackPop();

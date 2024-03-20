@@ -133,11 +133,11 @@ int main()
     Cpu::Instance()->B.mValue = 0xAB;
     BOOST_LOG_TRIVIAL(debug) << &(Cpu::Instance()->B);
      BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->B;
-    cpu.Execute();
+  //  cpu.Execute();
     //cpu.Execute();
     BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
     Cpu::Instance()->B.mValue = 0xFF;
-    cpu.Execute();
+  //  cpu.Execute();
     BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
 
     Cpu::Instance()->PC.mValue = 0xABCD;
@@ -149,7 +149,7 @@ int main()
     Cpu::Instance()->B.mValue = 0x0B;
     BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->B;
 
-    Cpu::Instance()->Execute();
+   // Cpu::Instance()->Execute();
     BOOST_LOG_TRIVIAL(debug) << Cpu::Instance()->A;
 
     reg.mValue = 0x0;
