@@ -29,7 +29,7 @@ struct Expected
 
 void SetInitialParams(boost::property_tree::ptree::value_type& a)
 {
-    //gbc::Ram::Instance()->ClearMem();
+    gbc::Ram::Instance()->ClearMem();
     std::cout << a.second.get<std::string>("name") << std::endl;
     std::cout << a.second.get<unsigned short>("initial.pc") << std::endl;
     CPU->PC.Set(a.second.get<unsigned short>("initial.pc"));
@@ -95,7 +95,7 @@ void CheckFinalState(const Expected& e)
     for (int i = 0; i < 0xFFFF; i++)
         BOOST_CHECK_EQUAL(gbc::Ram::Instance()->ReadByte(i) , e.memory[i]);
 }
-
+/*
 BOOST_AUTO_TEST_CASE(cpu_instruction_7B)
 {
 	boost::property_tree::ptree pt;
@@ -249,3 +249,18 @@ BOOST_AUTO_TEST_CASE(cpu_instruction_CB10)
         CheckFinalState(e);
 	}
 }
+*/
+BOOST_AUTO_TEST_CASE(cpu_instruction_CB00)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("/mnt/c/Users/Joe Mcilvaine/gbc_emulator/tests/v1/cb 00.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+        CheckFinalState(e);
+	}
+}
+

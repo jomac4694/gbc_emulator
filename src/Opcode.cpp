@@ -948,7 +948,7 @@ namespace gbc
     void Opcode::RlcA(register8_t *r1)
     {
         bool bit_7 = r1->BitAtLSB(7);
-        r1->Set( (CPU->A.value() << 1) | bit_7);
+        r1->Set( (r1->value() << 1) | bit_7);
 
         CPU->FLAGS.SetZeroFlag(r1->value() == 0x0);
         CPU->FLAGS.SetSubtractFlag(false);
