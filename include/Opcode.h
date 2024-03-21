@@ -45,99 +45,103 @@ struct Opcode
     std::map<uint16_t, OpcodeCommand> opcode_map;
 
     // 1. LD nn, n
-    void LdReadByte(register8_t* r1);
+    void LdReadByte(std::shared_ptr<register8_t> r1);
 
-    void LdWriteByte(register8_t* r1);
+    void LdWriteByte(std::shared_ptr<register8_t> r1);
 
-    void LdWriteWord(register16_t* r1);
+    void LdWriteWord(std::shared_ptr<Register16> r1);
 
-    void LdReadWord(register16_t* r1);
+    void LdReadWord(std::shared_ptr<Register16> r1);
 
-    void Ld_A(register16_t* r1);
+    void Ld_A(std::shared_ptr<Register16> r1);
 
-    void Ld_HL(register8_t* r1);
+    void Ld_Write_A(std::shared_ptr<Register16> r1);
 
-    void Ld_HL_Write(register8_t* r1);
+    void Ld_Write_A_PC();
+
+    void Ld_HL(std::shared_ptr<register8_t> r1);
+
+    void Ld_HL_Write(std::shared_ptr<register8_t> r1);
 
     void Ld_HL_WritePC();
 
     // 2. LD r1, r2
-    void LdR1R2(register8_t* r1, register8_t* r2);
+    void LdR1R2(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
-    void LdR1R2_16(register16_t* r1, register16_t* r2);
+    void LdR1R2_16(std::shared_ptr<Register16> r1, std::shared_ptr<Register16> r2);
 
     // Add 8-bit
-    void AddA(register8_t* r1, register8_t* r2);
+    void AddA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void AddA_HL();
 
     void AddA_PC();
 
     // Adc 8-bit. Very redundant code but more explicit i guess
-    void AdcA(register8_t* r1, register8_t* r2);
+    void AdcA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void AdcA_HL();
 
     void AdcA_PC();
 
     // SubA
-    void SubA(register8_t* r1, register8_t* r2);
+    void SubA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void SubA_HL();
 
     void SubA_PC();
 
     // SbcA
-    void SbcA(register8_t* r1, register8_t* r2);
+    void SbcA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void SbcA_HL();
 
     void SbcA_PC();
 
-    void AndA(register8_t* r1, register8_t* r2);
+    void AndA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void AndA_HL();
 
     void AndA_PC();
 
-    void OrA(register8_t* r1, register8_t* r2);
+    void OrA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void OrA_HL();
 
     void OrA_PC();
 
-    void XorA(register8_t* r1, register8_t* r2);
+    void XorA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void XorA_HL();
 
     void XorA_PC();
 
-    void CpA(register8_t* r1, register8_t* r2);
+    void CpA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void CpA_HL();
 
     void CpA_PC();
 
-    void IncN(register8_t* r1);
+    void IncN(std::shared_ptr<register8_t> r1);
 
-    void DecN(register8_t* r1);
+    void DecN(std::shared_ptr<register8_t> r1);
 
     // Add 16-bit
-    void AddHL(register16_t* r1, register16_t* r2);
+    void AddHL(std::shared_ptr<Register16> r1, std::shared_ptr<Register16> r2);
 
     void AddSP();
 
-    void IncN16(register16_t* r1);
+    void IncN16(std::shared_ptr<Register16> r1);
 
-    void DecN16(register16_t* r1);
+    void DecN16(std::shared_ptr<Register16> r1);
 
-    void Swap(register8_t* r1);
+    void Swap(std::shared_ptr<register8_t> r1);
 
     void SwapHL();
 
-    void Push(register16_t* r1);
+    void Push(std::shared_ptr<Register16> r1);
 
-    void Pop(register16_t* r1);
+    void Pop(std::shared_ptr<Register16> r1);
 
     void DAA();
 
@@ -155,19 +159,21 @@ struct Opcode
 
     void EI();
 
-    void RlcA(register8_t* r1);
+    void RlcA(std::shared_ptr<register8_t> r1);
 
-    void RrcA(register8_t* r1);
+    void RlcA2(std::shared_ptr<register8_t> r1);
 
-    void Rla(register8_t* r1);
+    void RrcA(std::shared_ptr<register8_t> r1);
 
-    void RrA(register8_t* r1);
+    void Rla(std::shared_ptr<register8_t> r1);
 
-    void Sla(register8_t* r1);
+    void RrA(std::shared_ptr<register8_t> r1);
 
-    void Sra(register8_t* r1);
+    void Sla(std::shared_ptr<register8_t> r1);
 
-    void Srl(register8_t* r1);
+    void Sra(std::shared_ptr<register8_t> r1);
+
+    void Srl(std::shared_ptr<register8_t> r1);
 
     void RlcA_HL();
 
@@ -205,15 +211,15 @@ struct Opcode
 
     void RetI();
 
-    void BitBR(byte b, register8_t* r1);
+    void BitBR(byte b, std::shared_ptr<register8_t> r1);
 
     void BitBR_HL(byte b);
 
-    void SetBR(byte b, register8_t* r1);
+    void SetBR(byte b, std::shared_ptr<register8_t> r1);
 
     void SetBR_HL(byte b);
 
-    void ResBR(byte b, register8_t* r1);
+    void ResBR(byte b, std::shared_ptr<register8_t> r1);
 
     void ResBR_HL(byte b);
 

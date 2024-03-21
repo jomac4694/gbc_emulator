@@ -64,6 +64,10 @@ namespace gbc
 
         void WriteWord(address16_t address, register16_t value);
 
+        uint16_t ReadWordStack(address16_t address);
+
+        void WriteWordStack(address16_t address, register16_t value);
+
         void ClearMem();
 
         static std::shared_ptr<Ram> Instance();

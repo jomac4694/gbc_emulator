@@ -29,7 +29,7 @@ class Register
 
         }
 
-        void Set(T val)
+        virtual void Set(T val)
         {
             BOOST_LOG_TRIVIAL(debug) << "Setting value in Register " << mName << " from " << Hex() << " to " << Hex<T>(val);
             mValue = val;
@@ -118,6 +118,16 @@ class Register
                 mValue = mValue ^ (0x0000000000000001 << i); 
             }
 
+        }
+
+        void Dec()
+        {
+            Set(mValue - 1);
+        }
+
+        void Inc()
+        {
+            Set(mValue + 1);
         }
 
         // Get High bits for the given type (ex. int is 32 bits so take high 32/2 = 16 bits)
@@ -245,61 +255,78 @@ typedef Register<uint16_t> register16_t;
 typedef Register<uint32_t> register32_t;
 typedef Register<uint16_t> address16_t;
 
+
+// Specialization for flag register
+class flag_register_t : public register8_t
+{
+    public:
+        flag_register_t(byte val, std::string name) : Register(val, name)
+        {
+            AssignBitName(7, "ZeroFlag");
+            AssignBitName(6, "SubtractFlag");
+            AssignBitName(5, "HalfCarryFlag");
+            AssignBitName(4, "CarryFlag");
+        } 
+
+        void SetZeroFlag(bool bit) { bit ? SetBitLSB(7) : ResetBitLSB(7); }
+        bool ZeroFlag() { return BitAtLSB(7); }
+
+        void SetSubtractFlag(bool bit) { bit ? SetBitLSB(6) : ResetBitLSB(6); }
+        bool SubtractFlag() { return BitAtLSB(6); }
+
+        void SetHalfCarryFlag(bool bit) { bit ? SetBitLSB(5) : ResetBitLSB(5); }
+        bool HalfCarryFlag() { return BitAtLSB(5); }
+
+        void SetCarryFlag(bool bit) { bit ? SetBitLSB(4) : ResetBitLSB(4); }
+        bool CarryFlag() { return BitAtLSB(4); }
+
+};
+
 struct Register16
 {
     public:
 
-        Register16(register8_t* high, register8_t* low) :
+        Register16(uint16_t val, std::string name) : mVal(val, name)
+        {
+            mDualReg = false;
+        }
+
+
+        Register16(std::shared_ptr<register8_t> high, std::shared_ptr<register8_t> low) :
             mHigh(high),
             mLow(low)
-            {
-
-            }
+        {
+            mDualReg = true;
+        }
+        
         void Set(uint16_t val)
         { 
+            mDualReg ? SetDual(val) : mVal.Set(val);
+        }
+
+        uint16_t value()
+        {
+            return mDualReg ? GetDual() : mVal.value();
+        }
+
+        void SetDual(uint16_t val)
+        {
             register16_t tmp(val);
             mHigh->Set(tmp.High());
             mLow->Set(tmp.Low());
         }
 
-        uint16_t value()
+        uint16_t GetDual()
         {
             return (mHigh->value() << 8) | mLow->value();
         }
 
     private:
-        register8_t* mHigh;
-        register8_t* mLow;
+        std::shared_ptr<register8_t> mHigh;
+        std::shared_ptr<register8_t> mLow{nullptr};
+        register16_t mVal;
+        bool mDualReg;
 };
-
-
-// Specialization for flag register
-struct flag_register_t : Register<byte>
-{
-    flag_register_t(byte val, std::string name) : Register(val, name)
-    {
-        AssignBitName(7, "ZeroFlag");
-        AssignBitName(6, "SubtractFlag");
-        AssignBitName(5, "HalfCarryFlag");
-        AssignBitName(4, "CarryFlag");
-    } 
-
-    void SetZeroFlag(bool bit) { bit ? SetBitLSB(7) : ResetBitLSB(7); }
-    bool ZeroFlag() { return BitAtLSB(7); }
-
-    void SetSubtractFlag(bool bit) { bit ? SetBitLSB(6) : ResetBitLSB(6); }
-    bool SubtractFlag() { return BitAtLSB(6); }
-
-    void SetHalfCarryFlag(bool bit) { bit ? SetBitLSB(5) : ResetBitLSB(5); }
-    bool HalfCarryFlag() { return BitAtLSB(5); }
-
-    void SetCarryFlag(bool bit) { bit ? SetBitLSB(4) : ResetBitLSB(4); }
-    bool CarryFlag() { return BitAtLSB(4); }
-
-    
-};
-
-
 
 }
 #endif

@@ -71,21 +71,22 @@ public:
 
     static std::shared_ptr<Cpu> Instance();
 
-    register8_t A;
-    register8_t B;
-    register8_t C;
-    register8_t D;
-    register8_t E;
-    register8_t F;
-    register8_t H;
-    register8_t L;
-    address16_t PC;
-    address16_t SP;
-    register16_t AF;
-    register16_t BC;
-    register16_t DE;
-    register16_t HL;
-    flag_register_t FLAGS;
+    std::shared_ptr<register8_t> A;
+    std::shared_ptr<register8_t> B;
+    std::shared_ptr<register8_t> C;
+    std::shared_ptr<register8_t> D;
+    std::shared_ptr<register8_t> E;
+    std::shared_ptr<register8_t> F;
+    std::shared_ptr<flag_register_t> FLAGS;
+    std::shared_ptr<register8_t> H;
+    std::shared_ptr<register8_t> L;
+    std::shared_ptr<Register16> PC;
+    std::shared_ptr<Register16> SP;
+    std::shared_ptr<Register16> AF;
+    std::shared_ptr<Register16> BC;
+    std::shared_ptr<Register16> DE;
+    std::shared_ptr<Register16> HL;
+
     
 };
 }

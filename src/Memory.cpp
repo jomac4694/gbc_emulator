@@ -17,6 +17,7 @@ namespace gbc
     byte Ram::ReadByte(uint16_t address)
     {
         byte ret = mMemory[address];
+        BOOST_LOG_TRIVIAL(debug) << "Read byte " << Register<byte>::Hex<byte>(ret) << " at " << address;
         return ret;
     }
 
@@ -24,32 +25,35 @@ namespace gbc
     byte Ram::ReadByte(address16_t address)
     {
         byte ret = mMemory[address.value()];
+        BOOST_LOG_TRIVIAL(debug) << "Read byte " << Register<byte>::Hex<byte>(ret) << " at " << address.Hex();
         return ret;
     }
 
     uint16_t Ram::ReadWord(address16_t address)
     {
-        uint16_t ret = ReadByte(address);
-        address++;
-        ret = ret << 8;
-        uint16_t next = ReadByte(address);
-        return ret | next;
+        uint16_t low = ReadByte(address);
+        address.Inc();
+        uint16_t high = ReadByte(address);
+        return (high << 8) | low;
     }
 
     void Ram::WriteByte(uint16_t address, register8_t val)
     {
+        BOOST_LOG_TRIVIAL(debug) << "Setting address " << address << " to " << val;
         mMemory[address] = val.value();
     }
 
     void Ram::WriteByte(address16_t address, register8_t val)
-    {
+    {   
+        BOOST_LOG_TRIVIAL(debug) << "Setting address " << address.Hex() << " to " << val.Hex();
         mMemory[address.value()] = val.value();
     }
 
     void Ram::WriteWord(address16_t address, register16_t value)
     {
+        BOOST_LOG_TRIVIAL(debug) << "Writing word " << value.Hex() << " to address " << address.Hex();
         WriteByte(address, register8_t(value.High()));
-        address++;
+        address.Inc();
         WriteByte(address, register8_t(value.Low()));
     }
 
@@ -59,6 +63,25 @@ namespace gbc
         {
             mMemory[i] = 0x00;
 ;       }
+    }
+
+    uint16_t Ram::ReadWordStack(address16_t address)
+    {
+        address.Inc();
+        uint16_t ret = ReadByte(address);
+        address.Inc();
+        ret = ret << 8;
+        uint16_t next = ReadByte(address);
+        return ret | next;
+    }
+
+    void Ram::WriteWordStack(address16_t address, register16_t value)
+    {
+        BOOST_LOG_TRIVIAL(debug) << "Writing word " << value.Hex() << " to Stack address " << address.Hex();
+        address.Dec();
+        WriteByte(address, register8_t(value.High()));
+        address.Dec();
+        WriteByte(address, register8_t(value.Low()));
     }
 
     std::shared_ptr<Ram> Ram::Instance()
