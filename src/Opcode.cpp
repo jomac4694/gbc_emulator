@@ -90,13 +90,30 @@ namespace gbc
                 {0x75, OpcodeCommand("LD to HL", std::bind(&Opcode::Ld_HL_Write, this, CPU->L), 8)},
                 // LD write to HL from PC
                 {0x36, OpcodeCommand("LD to HL", std::bind(&Opcode::Ld_HL_WritePC, this), 12)},
+                // ld (nn), SP
+                {0x08, OpcodeCommand("LD to HL", std::bind(&Opcode::Ld_Write_SP, this), 20)},
                 // LD into register A
-                //{0x36, OpcodeCommand("LD to HL", std::bind(&Opcode::Ld_A, this, CPU->BC), 8)},
-                //{0x36, OpcodeCommand("LD to HL", std::bind(&Opcode::Ld_A, this, CPU->DE), 8)},
+                {0x0A, OpcodeCommand("LD to A:BC", std::bind(&Opcode::Ld_An, this, CPU->BC), 8)},
+                {0x1A, OpcodeCommand("LD to A", std::bind(&Opcode::Ld_An, this, CPU->DE), 8)},
+                {0x7E, OpcodeCommand("LD to A", std::bind(&Opcode::Ld_An, this, CPU->HL), 8)},
+                {0xFA, OpcodeCommand("LD to A:nn", std::bind(&Opcode::Ld_An_PC2, this), 16)},
+                {0x3E, OpcodeCommand("LD to A:n", std::bind(&Opcode::Ld_An_PC, this), 8)},
+
+                // more ld
+                {0x47, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->B, CPU->A), 4)},
+                {0x4F, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->C, CPU->A), 4)},
+                {0x57, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->D, CPU->A), 4)},
+                {0x5F, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->E, CPU->A), 4)},
+                {0x67, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->H, CPU->A), 4)},
+                {0x6F, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->L, CPU->A), 4)},
+
                 {0x01, OpcodeCommand("LD n,nn BC", std::bind(&Opcode::LdReadWord, this, CPU->BC), 12)},
                 {0x11, OpcodeCommand("LD n,nn DE", std::bind(&Opcode::LdReadWord, this, CPU->DE), 12)},
                 {0x21, OpcodeCommand("LD n,nn HL", std::bind(&Opcode::LdReadWord, this, CPU->HL), 12)},
                 {0x31, OpcodeCommand("LD n,nn SP", std::bind(&Opcode::LdReadWord, this, CPU->SP), 12)},
+                {0xF9, OpcodeCommand("LD SP,HL", std::bind(&Opcode::LdR1R2_16, this, CPU->SP, CPU->HL), 8)},
+                {0xF8, OpcodeCommand("LD SP,HL", std::bind(&Opcode::LdHL_SP, this), 12)},
+                
 
                 // ld n,a
                 {0x02, OpcodeCommand("LD n,a BC", std::bind(&Opcode::Ld_Write_A, this, CPU->BC), 8)},
@@ -111,8 +128,11 @@ namespace gbc
                 {0x1E, OpcodeCommand("Ldnn,n", std::bind(&Opcode::LdReadByte, this, CPU->E), 8)},
                 {0x26, OpcodeCommand("Ldnn,n", std::bind(&Opcode::LdReadByte, this, CPU->H), 8)},
                 {0x2E, OpcodeCommand("Ldnn,n", std::bind(&Opcode::LdReadByte, this, CPU->L), 8)},
-                // LD
-
+                // HLD
+                {0x2A, OpcodeCommand("Ld A, (HL+)", std::bind(&Opcode::Ld_HL_Inc, this), 8)},
+                {0x3A, OpcodeCommand("Ld A, (HL-)", std::bind(&Opcode::Ld_HL_Dec, this), 8)},
+                {0x22, OpcodeCommand("Ld (HL+), A", std::bind(&Opcode::Ld_Write_A_IncHL, this), 8)},
+                {0x32, OpcodeCommand("Ld (HL-), A", std::bind(&Opcode::Ld_Write_A_DecHL, this), 8)},
                 // PUSH
                 {0xF5, OpcodeCommand("PUSH Register AF", std::bind(&Opcode::Push, this, CPU->AF), 16)},
                 {0xC5, OpcodeCommand("PUSH Register BC", std::bind(&Opcode::Push, this, CPU->BC), 16)},
@@ -208,6 +228,7 @@ namespace gbc
                 {0x1C, OpcodeCommand("INC Reg E", std::bind(&Opcode::IncN, this, CPU->E), 4)},
                 {0x24, OpcodeCommand("INC Reg H", std::bind(&Opcode::IncN, this, CPU->H), 4)},
                 {0x2C, OpcodeCommand("INC Reg L", std::bind(&Opcode::IncN, this, CPU->L), 4)},
+                {0x34, OpcodeCommand("INC Reg (HL)", std::bind(&Opcode::IncN_HL, this), 12)},
                 // INC todo: add in hl read
 
                 // DEC register n
@@ -218,6 +239,7 @@ namespace gbc
                 {0x1D, OpcodeCommand("DEC Reg E", std::bind(&Opcode::DecN, this, CPU->E), 4)},
                 {0x25, OpcodeCommand("DEC Reg H", std::bind(&Opcode::DecN, this, CPU->H), 4)},
                 {0x2D, OpcodeCommand("DEC Reg L", std::bind(&Opcode::DecN, this, CPU->L), 4)},
+                {0x35, OpcodeCommand("DEC Reg (HL)", std::bind(&Opcode::DecN_HL, this), 12)},
                 // DEC todo: add in HL read
 
                 // 16-bit ALU ops
@@ -248,6 +270,26 @@ namespace gbc
                 {0xCB35, OpcodeCommand("SWAP Reg L", std::bind(&Opcode::Swap, this, CPU->L), 8)},
                 {0xCB36, OpcodeCommand("SWAP Reg (HL)", std::bind(&Opcode::SwapHL, this), 16)},
 
+                // DAA
+                {0x27, OpcodeCommand("DAA", std::bind(&Opcode::DAA, this), 4)},
+
+                // CPL
+                {0x2F, OpcodeCommand("CPL", std::bind(&Opcode::CPL, this), 4)},
+                // SCF
+                {0x37, OpcodeCommand("SCF", std::bind(&Opcode::SCF, this), 4)},
+                // CCF
+                {0x3F, OpcodeCommand("SCF", std::bind(&Opcode::CCF, this), 4)},
+
+                // NOP
+                {0x00, OpcodeCommand("NOP", std::bind(&Opcode::NOP, this), 4)},
+                // HALT
+                {0x76, OpcodeCommand("HALT", std::bind(&Opcode::HALT, this), 4)},
+                // STOP
+                {0x1000, OpcodeCommand("STOP", std::bind(&Opcode::STOP, this), 4)},
+                // DI
+                {0xF3, OpcodeCommand("DI", std::bind(&Opcode::DI, this), 4)},
+                //EI
+                {0xFB, OpcodeCommand("EI", std::bind(&Opcode::EI, this), 4)},
                 // Jumps
                 // JP nn
                 {0xC3, OpcodeCommand("JP nn", std::bind(&Opcode::JpNN, this), 12)},
@@ -258,9 +300,9 @@ namespace gbc
                 {0xD2, OpcodeCommand("JP cc,nn", std::bind(&Opcode::JpCCNN, this, &GetCarryFlagN), 12)},
                 {0xDA, OpcodeCommand("JP cc,nn", std::bind(&Opcode::JpCCNN, this, &GetCarryFlag), 12)},
                 // JP HL
-                {0xDA, OpcodeCommand("JP (HL)", std::bind(&Opcode::JpHL, this), 4)},
+                {0xE9, OpcodeCommand("JP (HL)", std::bind(&Opcode::JpHL, this), 4)},
                 // JR n
-                {0xDA, OpcodeCommand("JR n", std::bind(&Opcode::JrN, this), 8)},
+                {0x18, OpcodeCommand("JR n", std::bind(&Opcode::JrN, this), 8)},
                 // JR cc,n
                 {0x20, OpcodeCommand("JR cc,n", std::bind(&Opcode::JrCCN, this, &GetZeroFlagN), 8)},
                 {0x28, OpcodeCommand("JR cc,n", std::bind(&Opcode::JrCCN, this, &GetZeroFlag), 8)},
@@ -510,7 +552,7 @@ namespace gbc
                 {0xCB0D, OpcodeCommand(" RrcA l", std::bind(&Opcode::RrcA, this, CPU->L), 8)},
                 {0xCB0E, OpcodeCommand(" RrcA hl", std::bind(&Opcode::RrcA_HL, this), 16)},
                 {0xCB0F, OpcodeCommand(" RrcA a", std::bind(&Opcode::RrcA, this, CPU->A), 8)},
-                {0x0F, OpcodeCommand(" RrcA a", std::bind(&Opcode::RrcA, this, CPU->A), 4)},
+                {0x0F, OpcodeCommand(" RrcA a", std::bind(&Opcode::RrcA2, this, CPU->A), 4)},
                 // rotate left
                 {0xCB10, OpcodeCommand(" Rla b", std::bind(&Opcode::Rla, this, CPU->B), 8)},
                 {0xCB11, OpcodeCommand(" Rla c", std::bind(&Opcode::Rla, this, CPU->C), 8)},
@@ -520,7 +562,7 @@ namespace gbc
                 {0xCB15, OpcodeCommand(" Rla l", std::bind(&Opcode::Rla, this, CPU->L), 8)},
                 {0xCB16, OpcodeCommand(" Rla hl", std::bind(&Opcode::Rla_HL, this), 16)},
                 {0xCB17, OpcodeCommand(" Rla a", std::bind(&Opcode::Rla, this, CPU->A), 8)},
-                {0x17, OpcodeCommand(" Rla a", std::bind(&Opcode::Rla, this, CPU->A), 4)},
+                {0x17, OpcodeCommand(" Rla a", std::bind(&Opcode::Rla2, this, CPU->A), 4)},
                 // rotate right
                 {0xCB18, OpcodeCommand(" RrA b", std::bind(&Opcode::RrA, this, CPU->B), 8)},
                 {0xCB19, OpcodeCommand(" RrA c", std::bind(&Opcode::RrA, this, CPU->C), 8)},
@@ -530,7 +572,7 @@ namespace gbc
                 {0xCB1D, OpcodeCommand(" RrA l", std::bind(&Opcode::RrA, this, CPU->L), 8)},
                 {0xCB1E, OpcodeCommand(" RrA hl", std::bind(&Opcode::RrA_HL, this), 16)},
                 {0xCB1F, OpcodeCommand(" RrA a", std::bind(&Opcode::RrA, this, CPU->A), 8)},
-                {0x1F, OpcodeCommand(" RrA a ", std::bind(&Opcode::RrA, this, CPU->A), 4)},
+                {0x1F, OpcodeCommand(" RrA a ", std::bind(&Opcode::RrA2, this, CPU->A), 4)},
                 // shift left
                 {0xCB20, OpcodeCommand(" Sla b", std::bind(&Opcode::Sla, this, CPU->B), 8)},
                 {0xCB21, OpcodeCommand(" Sla c", std::bind(&Opcode::Sla, this, CPU->C), 8)},
@@ -590,15 +632,59 @@ namespace gbc
         r1->Set(read);
     }
 
+    void Opcode::Ld_An(std::shared_ptr<Register16> r1)
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(r1->value());
+        CPU->A->Set(read);
+    }
+
+    void Opcode::Ld_An_PC()
+    {
+        CPU->A->Set(CPU->GetByteFromPC());
+    }
+
+    void Opcode::Ld_An_PC2()
+    {
+        uint16_t addr = CPU->GetWordFromPC();
+        byte read = gbc::Ram::Instance()->ReadByte(addr);
+        CPU->A->Set(read);
+    }
+
     void Opcode::Ld_Write_A(std::shared_ptr<Register16> r1)
     {
         gbc::Ram::Instance()->WriteByte(r1->value(), CPU->A->value());
+    }
+
+    void Opcode::Ld_Write_A_IncHL()
+    {
+        gbc::Ram::Instance()->WriteByte(CPU->HL->value(), CPU->A->value());
+        IncN16(CPU->HL);
+    }
+
+    void Opcode::Ld_Write_A_DecHL()
+    {
+        gbc::Ram::Instance()->WriteByte(CPU->HL->value(), CPU->A->value());
+        DecN16(CPU->HL);
     }
 
     void Opcode::Ld_HL(std::shared_ptr<register8_t> r1)
     {
         byte read = gbc::Ram::Instance()->ReadByte(CPU->HL->value());
         r1->Set(read);
+    }
+
+    void Opcode::Ld_HL_Inc()
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(CPU->HL->value());
+        CPU->A->Set(read);
+        IncN16(CPU->HL);
+    }
+
+    void Opcode::Ld_HL_Dec()
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(CPU->HL->value());
+        CPU->A->Set(read);
+        DecN16(CPU->HL);
     }
 
     void Opcode::Ld_HL_Write(std::shared_ptr<register8_t> r1)
@@ -609,6 +695,15 @@ namespace gbc
     void Opcode::Ld_HL_WritePC()
     {
         gbc::Ram::Instance()->WriteByte(CPU->HL->value(), CPU->GetByteFromPC());
+    }
+
+    void Opcode::Ld_Write_SP()
+    {
+        register16_t sp_tmp = CPU->SP->value();
+        uint16_t addr = CPU->GetWordFromPC();
+        gbc::Ram::Instance()->WriteByte(addr, sp_tmp.Low());
+        gbc::Ram::Instance()->WriteByte(addr + 1, sp_tmp.High());
+
     }
 
     void Opcode::Ld_Write_A_PC()
@@ -629,6 +724,26 @@ namespace gbc
         r1->Set( r2->value());
     }
 
+    void Opcode::LdHL_SP()
+    {
+        int8_t n = CPU->GetByteFromPC();
+        BOOST_LOG_TRIVIAL(debug) << "LDHLSP " << (int) CPU->SP->value() << " + " << (int) n;
+        if (n < 0)
+        {
+            CPU->FLAGS->SetHalfCarryFlag(((0xFF & CPU->SP->value()) + n) < 0x0);
+            CPU->FLAGS->SetCarryFlag(((0xF & CPU->SP->value() + n)) < 0x0);
+        }
+        else
+        {
+            CPU->FLAGS->SetHalfCarryFlag(((0xFF & CPU->SP->value()) + n) > 0xFF);
+            CPU->FLAGS->SetCarryFlag(((CPU->SP->value() + n)) > 0xFFFF);
+        }
+
+        CPU->FLAGS->SetZeroFlag(false);
+        CPU->FLAGS->SetSubtractFlag(false);
+
+        CPU->HL->Set(CPU->SP->value() + n);
+    }
     // Add 8-bit
     void Opcode::AddA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2)
     {
@@ -713,8 +828,8 @@ namespace gbc
 
         CPU->FLAGS->SetZeroFlag(result == 0x0);
         CPU->FLAGS->SetSubtractFlag(true);
-        CPU->FLAGS->SetHalfCarryFlag( (result & 0x10) != 0);
-        CPU->FLAGS->SetCarryFlag(result < 0);
+        CPU->FLAGS->SetHalfCarryFlag( ((0xF & r1->value()) - (0xF & r2->value())) - CPU->FLAGS->CarryFlag() < 0);
+        CPU->FLAGS->SetCarryFlag(r1->value() - CPU->FLAGS->CarryFlag() < r2->value());
 
         r1->Set( static_cast<byte>(result));
     }
@@ -834,6 +949,17 @@ namespace gbc
 
     }
 
+    void Opcode::IncN_HL()
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(CPU->HL->value());
+        CPU->FLAGS->SetHalfCarryFlag((0xF & read) + 1 > 0xF);
+        read++;
+        CPU->FLAGS->SetZeroFlag(read == 0x0);
+        CPU->FLAGS->SetSubtractFlag(false);
+        gbc::Ram::Instance()->WriteByte(CPU->HL->value(), read);
+
+    }
+
     void Opcode::DecN(std::shared_ptr<register8_t> r1)
     {
         CPU->FLAGS->SetHalfCarryFlag((r1->value() & 0xF) - 1 < 0);
@@ -842,6 +968,19 @@ namespace gbc
         CPU->FLAGS->SetSubtractFlag(true);
 
     }
+
+    void Opcode::DecN_HL()
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(CPU->HL->value());
+        CPU->FLAGS->SetHalfCarryFlag((read & 0xF) - 1 < 0);
+        read--;
+        CPU->FLAGS->SetZeroFlag(read == 0x0);
+        CPU->FLAGS->SetSubtractFlag(true);
+        gbc::Ram::Instance()->WriteByte(CPU->HL->value(), read);
+
+    }
+
+    
 
     // Add 16-bit
     void Opcode::AddHL(std::shared_ptr<Register16> r1, std::shared_ptr<Register16> r2)
@@ -910,19 +1049,33 @@ namespace gbc
     // binary coded decimal conversion
     void Opcode::DAA()
     {
-        int val_a = CPU->A->value();
-        std::vector<byte> stk;
-        for (int i = 0; i < 2; i++)
+        byte val_a = CPU->A->value();
+        uint16_t correct = CPU->FLAGS->CarryFlag() ? 0x60 : 0x00;
+
+        if (CPU->FLAGS->HalfCarryFlag() || (!CPU->FLAGS->SubtractFlag() && ((val_a & 0x0F) > 9)))
         {
-            // std::cout << "pushing=" << (int) num % 10 << std::endl;
-            stk.push_back(val_a % 10);
-            val_a /= 10;
+            correct |= 0x06;
         }
 
-        //  CPU->FLAGS->SetZeroFlag(r1->value() == 0x0);
+        if (CPU->FLAGS->CarryFlag() || (!CPU->FLAGS->SubtractFlag() && (val_a > 0x99)))
+        {
+            correct |= 0x60;
+        }
 
+        val_a = CPU->FLAGS->SubtractFlag() ? static_cast<byte>(val_a - correct) : static_cast<byte>(val_a + correct);
+        CPU->FLAGS->SetZeroFlag(val_a == 0x0);
         CPU->FLAGS->SetHalfCarryFlag(false);
-        CPU->FLAGS->SetCarryFlag(false);
+        CPU->FLAGS->SetCarryFlag(((correct << 2) & 0x100) != 0);
+        CPU->A->Set(val_a);
+
+    }
+
+    void Opcode::CPL()
+    {
+        byte res = CPU->A->value() ^ 0xFF;
+        CPU->FLAGS->SetSubtractFlag(true);
+        CPU->FLAGS->SetHalfCarryFlag(true);
+        CPU->A->Set(res);
     }
     // complement carry flag
     void Opcode::CCF()
@@ -982,13 +1135,8 @@ namespace gbc
 
     void Opcode::RlcA2(std::shared_ptr<register8_t> r1)
     {
-        bool bit_7 = r1->BitAtLSB(7);
-        r1->Set( (r1->value() << 1) | bit_7);
-
+        RlcA(r1);
         CPU->FLAGS->SetZeroFlag(false);
-        CPU->FLAGS->SetSubtractFlag(false);
-        CPU->FLAGS->SetHalfCarryFlag(false);
-        CPU->FLAGS->SetCarryFlag(bit_7);
     }
 
     void Opcode::Rla(std::shared_ptr<register8_t> r1)
@@ -1003,6 +1151,12 @@ namespace gbc
         CPU->FLAGS->SetCarryFlag(bit_7);
     }
 
+    void Opcode::Rla2(std::shared_ptr<register8_t> r1)
+    {
+        Rla(r1);
+        CPU->FLAGS->SetZeroFlag(false);
+    }
+
     void Opcode::RrcA(std::shared_ptr<register8_t> r1)
     {
         bool bit_0 = r1->BitAtLSB(0);
@@ -1012,6 +1166,12 @@ namespace gbc
         CPU->FLAGS->SetSubtractFlag(false);
         CPU->FLAGS->SetHalfCarryFlag(false);
         CPU->FLAGS->SetCarryFlag(bit_0);
+    }
+
+    void Opcode::RrcA2(std::shared_ptr<register8_t> r1)
+    {
+        RrcA(r1);
+        CPU->FLAGS->SetZeroFlag(false);
     }
 
     void Opcode::RrA(std::shared_ptr<register8_t> r1)
@@ -1024,6 +1184,12 @@ namespace gbc
         CPU->FLAGS->SetSubtractFlag(false);
         CPU->FLAGS->SetHalfCarryFlag(false);
         CPU->FLAGS->SetCarryFlag(bit_0);
+    }
+
+    void Opcode::RrA2(std::shared_ptr<register8_t> r1)
+    {
+        RrA(r1);
+        CPU->FLAGS->SetZeroFlag(false);
     }
 
     void Opcode::Sla(std::shared_ptr<register8_t> r1)
@@ -1138,27 +1304,32 @@ namespace gbc
 
     void Opcode::JrN()
     {
+        BOOST_LOG_TRIVIAL(debug) << "doing JR n";
         int8_t read = static_cast<int8_t>(CPU->GetByteFromPC());
         CPU->PC->Set(CPU->PC->value() + read);
     }
 
     void Opcode::JrCCN(std::function<bool()> bit)
     {
-        if (bit)
+        if (bit())
             JrN();
+        else
+            uint16_t read = CPU->GetByteFromPC();
     }
 
     void Opcode::CallNN()
     {
-        Push(CPU->PC);
         uint16_t read = CPU->GetWordFromPC();
+        Push(CPU->PC);
         CPU->PC->Set(read);
     }
 
     void Opcode::CallCCNN(std::function<bool()> bit)
     {
-        if (bit)
+        if (bit())
             CallNN();
+        else
+            uint16_t read = CPU->GetWordFromPC();
     }
 
     void Opcode::Rst(uint8_t address)
@@ -1169,18 +1340,21 @@ namespace gbc
 
     void Opcode::Ret()
     {
-        register16_t tmp = CPU->PC->value();
-        Pop(CPU->PC);
+        BOOST_LOG_TRIVIAL(debug) << "Doing ret cc";
+        uint16_t val = CPU->StackPop();
+        CPU->PC->Set(val);
     }
 
     void Opcode::RetCC(std::function<bool()> bit)
     {
-        if (bit)
+        if (bit())
             Ret();
     }
 
     void Opcode::RetI()
     {
+        uint16_t read = CPU->StackPop();
+        CPU->PC->Set(read);
     }
 
     void Opcode::BitBR(byte b, std::shared_ptr<register8_t> r1)

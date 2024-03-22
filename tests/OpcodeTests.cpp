@@ -454,7 +454,7 @@ BOOST_AUTO_TEST_CASE(test_register_shit)
 	CPU->AF->Set(0xABCD);
 	//BOOST_LOG_TRIVIAL(debug) << cpu.FLAGS->value();
 }
-*/
+
 BOOST_AUTO_TEST_CASE(cpu_instruction_00)
 {
 	boost::property_tree::ptree pt;
@@ -550,6 +550,3090 @@ BOOST_AUTO_TEST_CASE(cpu_instruction_07)
 {
 	boost::property_tree::ptree pt;
 	boost::property_tree::read_json("../tests/v1/07.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_08)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/08.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_09)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/09.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_0A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_0B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_0C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_0D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_0E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_0F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/0f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_10)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/10.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_11)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/11.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_12)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/12.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_13)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/13.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_14)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/14.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_15)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/15.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_16)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/16.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_17)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/17.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_18)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/18.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_19)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/19.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_1F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/1f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_20)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/20.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_21)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/21.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_22)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/22.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_23)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/23.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_24)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/24.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_25)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/25.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_26)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/26.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_27)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/27.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_28)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/28.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_29)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/29.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_2A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_2B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_2C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_2D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_2E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_2F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/2f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_30)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/30.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_31)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/31.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_32)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/32.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_33)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/33.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_34)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/34.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_35)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/35.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_36)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/36.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_37)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/37.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_38)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/38.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_39)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/39.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_3A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_3B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_3C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_3D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_3E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_3F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/3f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_40)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/40.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_41)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/41.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_42)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/42.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_43)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/43.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_44)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/44.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_45)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/45.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_46)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/46.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_47)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/47.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_48)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/48.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_49)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/49.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_4A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_4B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_4C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_4D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_4E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_4F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/4f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_50)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/50.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_51)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/51.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_52)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/52.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_53)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/53.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_54)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/54.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_55)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/55.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_56)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/56.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_57)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/57.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_58)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/58.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_59)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/59.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_5F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/5f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_60)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/60.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_61)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/61.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_62)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/62.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_63)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/63.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_64)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/64.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_65)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/65.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_66)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/66.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_67)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/67.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_68)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/68.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_69)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/69.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_6F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/6f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_70)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/70.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_71)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/71.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_72)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/72.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_73)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/73.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_74)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/74.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_75)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/75.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_76)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/76.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_77)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/77.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_78)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/78.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_79)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/79.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_7F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/7f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_80)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/80.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_81)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/81.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_82)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/82.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_83)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/83.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_84)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/84.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_85)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/85.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_86)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/86.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_87)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/87.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_88)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/88.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_89)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/89.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_8F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/8f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_90)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/90.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_91)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/91.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_92)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/92.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_93)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/93.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_94)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/94.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_95)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/95.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_96)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/96.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_97)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/97.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_98)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/98.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_99)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/99.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_9A)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9a.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_9B)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9b.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_9C)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9c.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_9D)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9d.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_9E)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9e.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_9F)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/9f.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A3)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a3.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A4)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a4.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_A9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/a9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_AA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/aa.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_AB)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ab.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_AC)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ac.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_AD)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ad.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_AE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ae.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_AF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/af.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B3)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b3.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_B4)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b4.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_B9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/b9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ba.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BB)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/bb.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BC)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/bc.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BD)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/bd.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/be.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_BF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/bf.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(cpu_instruction_C3)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c3.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C4)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c4.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_C9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/c9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_CA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ca.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_CC)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/cc.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+*/
+BOOST_AUTO_TEST_CASE(cpu_instruction_CD)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/cd.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_CE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ce.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_CF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/cf.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D4)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d4.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_D9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/d9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_DA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/da.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_DC)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/dc.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_DE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/de.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_DF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/df.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_E9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/e9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_EA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ea.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_EE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ee.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_EF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ef.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F0)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f0.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F1)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f1.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F2)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f2.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F3)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f3.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F5)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f5.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F6)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f6.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F7)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f7.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F8)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f8.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_F9)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/f9.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_FA)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/fa.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_FB)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/fb.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_FE)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/fe.json", pt);
+	for(auto& a : pt)
+	{
+		Expected e;
+		SetInitialParams(a);
+		SetExpectedParams(a, e);
+		CPU->Execute();
+		CheckFinalState(e, a);
+	}
+}
+BOOST_AUTO_TEST_CASE(cpu_instruction_FF)
+{
+	boost::property_tree::ptree pt;
+	boost::property_tree::read_json("../tests/v1/ff.json", pt);
 	for(auto& a : pt)
 	{
 		Expected e;

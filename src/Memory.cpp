@@ -67,12 +67,10 @@ namespace gbc
 
     uint16_t Ram::ReadWordStack(address16_t address)
     {
+        uint16_t low = ReadByte(address);
         address.Inc();
-        uint16_t ret = ReadByte(address);
-        address.Inc();
-        ret = ret << 8;
-        uint16_t next = ReadByte(address);
-        return ret | next;
+        uint16_t high = ReadByte(address);
+        return (high << 8) | low;
     }
 
     void Ram::WriteWordStack(address16_t address, register16_t value)

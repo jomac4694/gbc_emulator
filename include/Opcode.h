@@ -59,16 +59,34 @@ struct Opcode
 
     void Ld_Write_A_PC();
 
+    void Ld_An(std::shared_ptr<Register16> r1);
+
+    void Ld_An_PC();
+
+    void Ld_An_PC2();
+
     void Ld_HL(std::shared_ptr<register8_t> r1);
 
     void Ld_HL_Write(std::shared_ptr<register8_t> r1);
 
     void Ld_HL_WritePC();
 
+    void Ld_Write_SP();
+
+    void Ld_HL_Inc();
+
+    void Ld_HL_Dec();
+
+    void Ld_Write_A_IncHL();
+
+    void Ld_Write_A_DecHL();
+
     // 2. LD r1, r2
     void LdR1R2(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 
     void LdR1R2_16(std::shared_ptr<Register16> r1, std::shared_ptr<Register16> r2);
+
+    void LdHL_SP();
 
     // Add 8-bit
     void AddA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
@@ -124,7 +142,11 @@ struct Opcode
 
     void IncN(std::shared_ptr<register8_t> r1);
 
+    void IncN_HL();
+
     void DecN(std::shared_ptr<register8_t> r1);
+
+    void DecN_HL();
 
     // Add 16-bit
     void AddHL(std::shared_ptr<Register16> r1, std::shared_ptr<Register16> r2);
@@ -144,6 +166,8 @@ struct Opcode
     void Pop(std::shared_ptr<Register16> r1);
 
     void DAA();
+
+    void CPL();
 
     void CCF();
 
@@ -165,9 +189,15 @@ struct Opcode
 
     void RrcA(std::shared_ptr<register8_t> r1);
 
+    void RrcA2(std::shared_ptr<register8_t> r1);
+
     void Rla(std::shared_ptr<register8_t> r1);
 
+    void Rla2(std::shared_ptr<register8_t> r1);
+
     void RrA(std::shared_ptr<register8_t> r1);
+
+    void RrA2(std::shared_ptr<register8_t> r1);
 
     void Sla(std::shared_ptr<register8_t> r1);
 
