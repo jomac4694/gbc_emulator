@@ -183,6 +183,7 @@ namespace gbc
                 {0x9C, OpcodeCommand("0x9C SbcA A:H", std::bind(&Opcode::SbcA, this, CPU->A, CPU->H), 4)},
                 {0x9D, OpcodeCommand("0x9D SbcA A:L", std::bind(&Opcode::SbcA, this, CPU->A, CPU->L), 4)},
                 {0x9E, OpcodeCommand("0x9E SbcA_HL A:(HL)", std::bind(&Opcode::SbcA_HL, this), 8)},
+                {0xDE, OpcodeCommand("0xDE SbcA_PC #:", std::bind(&Opcode::SbcA_PC, this), 8)},
                 {0xA7, OpcodeCommand("0xA7 AndA A:A", std::bind(&Opcode::AndA, this, CPU->A, CPU->A), 4)},
                 {0xA0, OpcodeCommand("0xA0 AndA A:B", std::bind(&Opcode::AndA, this, CPU->A, CPU->B), 4)},
                 {0xA1, OpcodeCommand("0xA1 AndA A:C", std::bind(&Opcode::AndA, this, CPU->A, CPU->C), 4)},
