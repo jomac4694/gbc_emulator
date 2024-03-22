@@ -133,6 +133,15 @@ namespace gbc
                 {0x3A, OpcodeCommand("Ld A, (HL-)", std::bind(&Opcode::Ld_HL_Dec, this), 8)},
                 {0x22, OpcodeCommand("Ld (HL+), A", std::bind(&Opcode::Ld_Write_A_IncHL, this), 8)},
                 {0x32, OpcodeCommand("Ld (HL-), A", std::bind(&Opcode::Ld_Write_A_DecHL, this), 8)},
+
+                // LDH?
+                {0xE0, OpcodeCommand("Ld (0xFF00 + n), A", std::bind(&Opcode::Ldh_nA, this), 12)},
+                {0xF0, OpcodeCommand("Ld A, (0xFF00 + n)", std::bind(&Opcode::Ldh_An, this), 12)},
+
+                // LDC
+                {0xF2, OpcodeCommand("Ld (0xFF00 + n), A", std::bind(&Opcode::Ldh_AC, this), 8)},
+                {0xE2, OpcodeCommand("Ld A, (0xFF00 + n)", std::bind(&Opcode::Ldh_CA, this), 8)},
+
                 // PUSH
                 {0xF5, OpcodeCommand("PUSH Register AF", std::bind(&Opcode::Push, this, CPU->AF), 16)},
                 {0xC5, OpcodeCommand("PUSH Register BC", std::bind(&Opcode::Push, this, CPU->BC), 16)},
@@ -727,23 +736,42 @@ namespace gbc
 
     void Opcode::LdHL_SP()
     {
-        int8_t n = CPU->GetByteFromPC();
-        BOOST_LOG_TRIVIAL(debug) << "LDHLSP " << (int) CPU->SP->value() << " + " << (int) n;
-        if (n < 0)
-        {
-            CPU->FLAGS->SetHalfCarryFlag(((0xFF & CPU->SP->value()) + n) < 0x0);
-            CPU->FLAGS->SetCarryFlag(((0xF & CPU->SP->value() + n)) < 0x0);
-        }
-        else
-        {
-            CPU->FLAGS->SetHalfCarryFlag(((0xFF & CPU->SP->value()) + n) > 0xFF);
-            CPU->FLAGS->SetCarryFlag(((CPU->SP->value() + n)) > 0xFFFF);
-        }
+        int8_t n = static_cast<int8_t>(CPU->GetByteFromPC());
+        uint16_t sp = CPU->SP->value();
+        int result = sp + n;
 
         CPU->FLAGS->SetZeroFlag(false);
         CPU->FLAGS->SetSubtractFlag(false);
+        CPU->FLAGS->SetHalfCarryFlag(((sp ^ n ^ (result & 0xFFFF)) & 0x10) == 0x10);
+        CPU->FLAGS->SetCarryFlag(((sp ^ n ^ (result & 0xFFFF)) & 0x100) == 0x100);
 
-        CPU->HL->Set(CPU->SP->value() + n);
+        CPU->HL->Set(result);
+    }
+
+    void Opcode::Ldh_nA()
+    {
+        byte n = CPU->GetByteFromPC();
+        address16_t write_addr = 0xFF00 + n;
+        gbc::Ram::Instance()->WriteByte(write_addr, CPU->A->value());
+    }
+
+    void Opcode::Ldh_An()
+    {
+        byte n = CPU->GetByteFromPC();
+        byte read = gbc::Ram::Instance()->ReadByte(0xFF00 + n);
+        CPU->A->Set(read);
+    }
+
+    void Opcode::Ldh_CA()
+    {
+        address16_t write_addr = 0xFF00 + CPU->C->value();
+        gbc::Ram::Instance()->WriteByte(write_addr, CPU->A->value());
+    }
+
+    void Opcode::Ldh_AC()
+    {
+        byte read = gbc::Ram::Instance()->ReadByte(0xFF00 + CPU->C->value());
+        CPU->A->Set(read);
     }
     // Add 8-bit
     void Opcode::AddA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2)
@@ -999,12 +1027,13 @@ namespace gbc
     void Opcode::AddSP()
     {
         int8_t n = static_cast<int8_t>(CPU->GetByteFromPC());
-        int result = CPU->SP->value() + n;
+        uint16_t sp = CPU->SP->value();
+        int result = sp + n;
 
         CPU->FLAGS->SetZeroFlag(false);
         CPU->FLAGS->SetSubtractFlag(false);
-        CPU->FLAGS->SetHalfCarryFlag(result > 0xFFF);
-        CPU->FLAGS->SetCarryFlag(result > 0xFFFF);
+        CPU->FLAGS->SetHalfCarryFlag(((sp ^ n ^ (result & 0xFFFF)) & 0x10) == 0x10);
+        CPU->FLAGS->SetCarryFlag(((sp ^ n ^ (result & 0xFFFF)) & 0x100) == 0x100);
 
         CPU->SP->Set(CPU->SP->value() + n);
     }
@@ -1046,6 +1075,15 @@ namespace gbc
     {
         uint16_t read = CPU->StackPop();
         r1->Set( read);
+
+        if (r1->name() == "AF") 
+        {
+            for (int i = 0; i <= 3; i++)
+            {
+                // apparently these need to always be 0'd out
+                r1->Low()->ResetBitLSB(i);
+            }
+        }
     }
     // binary coded decimal conversion
     void Opcode::DAA()
@@ -1401,11 +1439,4 @@ namespace gbc
         static std::shared_ptr<Opcode> inst = std::make_shared<Opcode>(Opcode());
         return inst;
     }
-
-    //  std::map<uint16_t, std::shared_ptr<OpcodeCommand>> Opcode::opcode_map()
-    // {
-
-    // return opcode_map;
-    // }
-
 }

@@ -88,6 +88,14 @@ struct Opcode
 
     void LdHL_SP();
 
+    void Ldh_nA();
+
+    void Ldh_An();
+
+    void Ldh_CA();
+
+    void Ldh_AC();
+
     // Add 8-bit
     void AddA(std::shared_ptr<register8_t> r1, std::shared_ptr<register8_t> r2);
 

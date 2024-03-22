@@ -31,10 +31,10 @@ namespace gbc
                  PC(new Register16(0x100, "Program Counter")),
                  SP(new Register16(0xFFFE, "Stack Pointer")),
                  FLAGS(new flag_register_t(0x50, "Flag Register")),
-                 AF(new Register16(A, FLAGS)),
-                 BC(new Register16(B, C)),
-                 DE(new Register16(D, E)),
-                 HL(new Register16(H, L))
+                 AF(new Register16(A, FLAGS, "AF")),
+                 BC(new Register16(B, C, "BC")),
+                 DE(new Register16(D, E, "DE")),
+                 HL(new Register16(H, L, "HL"))
     {
     }
 

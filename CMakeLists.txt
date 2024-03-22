@@ -33,6 +33,7 @@ set(SOURCES
     "src/Cpu.cpp"
     "src/Opcode.cpp"
     "src/Memory.cpp"
+ #   "src/Register.cpp"
     "src/Utils.cpp"
 )
 

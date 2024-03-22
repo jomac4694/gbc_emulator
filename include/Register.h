@@ -19,6 +19,7 @@ class Register
         {
 
         }
+
         Register(T val) : mValue(val)
         {
             
@@ -31,9 +32,10 @@ class Register
 
         virtual void Set(T val)
         {
-            BOOST_LOG_TRIVIAL(debug) << "Setting value in Register " << mName << " from " << Hex() << " to " << Hex<T>(val);
+            BOOST_LOG_TRIVIAL(debug) << "Setting value in Register " << mName << " from " << Hex() << " to " << Register<T>::Hex(val);
             mValue = val;
         }
+
         std::string name() const { return mName;};
         
         T value() const { return mValue; };
@@ -178,13 +180,12 @@ class Register
             return ss.str();
         }
 
-        template<typename U>
-        static std::string Hex(U value)
+        static std::string Hex(T value)
         {
             std::stringstream ss;
             ss << std::uppercase << std::hex << "0x";
 
-            for (int i = sizeof(U) - 1; i >= 0; i--)
+            for (int i = sizeof(T) - 1; i >= 0; i--)
             {
                 ss << std::setw(2) << std::setfill('0') << (int) ((value >> i*8) & 0xFF);
             }
@@ -201,7 +202,7 @@ class Register
                 return;
             }
 
-            mBitNameMap.insert({bit, name});
+            mBitNameMap.insert({bit, name});  
         }
         
         inline friend std::ostream &operator << (std::ostream &out, const Register<T>& reg)
@@ -292,13 +293,19 @@ struct Register16
         }
 
 
-        Register16(std::shared_ptr<register8_t> high, std::shared_ptr<register8_t> low) :
+        Register16(std::shared_ptr<register8_t> high, std::shared_ptr<register8_t> low, std::string name) :
             mHigh(high),
-            mLow(low)
+            mLow(low),
+            mName(name)
         {
             mDualReg = true;
         }
-        
+
+        std::string name()
+        {
+            return mName;
+        }
+
         void Set(uint16_t val)
         { 
             mDualReg ? SetDual(val) : mVal.Set(val);
@@ -307,6 +314,16 @@ struct Register16
         uint16_t value()
         {
             return mDualReg ? GetDual() : mVal.value();
+        }
+
+        std::shared_ptr<register8_t> Low()
+        {
+            return mLow;
+        }
+
+        std::shared_ptr<register8_t> High()
+        {
+            return mHigh;
         }
 
         void SetDual(uint16_t val)
@@ -326,6 +343,7 @@ struct Register16
         std::shared_ptr<register8_t> mLow{nullptr};
         register16_t mVal;
         bool mDualReg;
+        std::string mName;
 };
 
 }
