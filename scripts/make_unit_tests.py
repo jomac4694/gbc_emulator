@@ -1,7 +1,7 @@
 import os
 import glob
 
-
+# auto gen all of the CPU instruction tests
 def gen_test_block(filename):
     hex_val = filename.replace(" ", "").split(".")[0].upper()
     print("BOOST_AUTO_TEST_CASE(cpu_instruction_" + hex_val + ")")

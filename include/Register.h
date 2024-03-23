@@ -283,6 +283,35 @@ class flag_register_t : public register8_t
 
 };
 
+class lcd_control_register : public register8_t
+{
+        lcd_control_register(byte val) : Register(val, "LCD Control")
+        {
+            AssignBitName(7, "LCD Display Enable");
+            AssignBitName(6, "Window TileMap Select");
+            AssignBitName(5, "Window Display Enable");
+            AssignBitName(4, "BG/Window TileData Select");
+            AssignBitName(3, "BG TileMap Display Select");
+            AssignBitName(2, "Sprite Size");
+            AssignBitName(1, "Sprite Display Enable");
+            AssignBitName(0, "BG Display");
+        }  
+};
+
+class lcd_status_register : public register8_t
+{
+        lcd_control_register(byte val) : Register(val, "LCD Control")
+        {
+            AssignBitName(6, "LY Coincidence Interrupt");
+            AssignBitName(5, "Mode 2 OAM Interrupt");
+            AssignBitName(4, "Mode 1 V-Blank Interrupt");
+            AssignBitName(3, "Mode 0 H-Blank Interrupt");
+            AssignBitName(2, "Coincidence Flag");
+            AssignBitName(1, "Mode Flag");
+            AssignBitName(0, "Mode Flag");
+        }  
+};
+
 struct Register16
 {
     public:

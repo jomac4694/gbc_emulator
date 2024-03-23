@@ -10,9 +10,12 @@
 #define CPU gbc::Cpu::Instance()
 using namespace gbc;
 
+// TESTS WERE AUTO GENERATED
+// Test JSON taken from https://github.com/raddad772/jsmoo/tree/main/misc/tests/GeneratedTests/sm83
+
 void initlog()
 {
-			boost::log::core::get()->set_filter
+	boost::log::core::get()->set_filter
     (
         boost::log::trivial::severity >= boost::log::trivial::error
     );
@@ -38,7 +41,7 @@ struct Expected
 
 void SetInitialParams(boost::property_tree::ptree::value_type& a)
 {
-	initlog();
+	initlog(); // turns out logging for 500 tests is slow
    // gbc::Ram::Instance()->ClearMem();
    // std::cout << a.second.get<std::string>("name") << std::endl;
    // std::cout << a.second.get<unsigned short>("initial.pc") << std::endl;

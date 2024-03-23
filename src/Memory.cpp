@@ -82,6 +82,12 @@ namespace gbc
         WriteByte(address, register8_t(value.Low()));
     }
 
+    void Ram::LoadRom(const std::vector<byte>& rom_data)
+    {
+        for (int i = MemoryMap::OFFSET_CART_HEADER_START; i < rom_data.size(); i++)
+            mMemory[i] = rom_data[i];
+    }
+
     std::shared_ptr<Ram> Ram::Instance()
     {
         static std::shared_ptr<Ram> inst = std::make_shared<Ram>(Ram());

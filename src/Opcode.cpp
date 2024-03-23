@@ -4,6 +4,8 @@
 #define CPU gbc::Cpu::Instance()
 namespace gbc
 {
+
+    // little helper functions to grab the flags dynamically
     bool GetCarryFlag()
     {
         return CPU->FLAGS->CarryFlag();
@@ -24,6 +26,7 @@ namespace gbc
         return !CPU->FLAGS->ZeroFlag();
     }
 
+    // big ugly monolithic map of every CPU instruction
     Opcode::Opcode()
     {
         opcode_map =

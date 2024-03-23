@@ -9,17 +9,6 @@
 namespace gbc
 {
 
-    /*
-    void PrintInstruction(Instruction ins)
-    {
-        std::cout << "X: " << (int) ins.X << std::endl;
-        std::cout << "Y: " << (int) ins.Y << std::endl;
-        std::cout << "N: " << (int) ins.N << std::endl;
-        std::cout << "NN: " << (int) ins.NN << std::endl;
-        std::cout << "NNN: " << (int) ins.NNN << std::endl;
-    }
-    */
-
     Cpu::Cpu() : A(new register8_t(0xAA, "A")),
                  B(new register8_t(0xAC, "B")),
                  C(new register8_t(0xAD, "C")),
