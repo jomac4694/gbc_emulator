@@ -18,6 +18,13 @@ using namespace boost::posix_time;
 
 static const int ROW_WIDTH = 256;
 
+// buffers for pixel maps
+typedef std::array<byte, 64> TileDataBuffer;
+typedef std::array<byte, 256*256> DisplayLayerBuffer;
+typedef std::array<byte, 64> SpriteBuffer;
+typedef std::array<byte, 128> TallSpriteBuffer;
+
+
 void initlog()
 {
 	boost::log::core::get()->set_filter
@@ -138,10 +145,6 @@ void shit()
 
     };
 
-    struct DisplayLayerBuffer
-    {
-
-    };
 
     void UpdateBuffers()
     {
@@ -472,12 +475,12 @@ initlog();
 }
   
   
-  auto vec = LoadRom("../src/roms/single_ins.gb");
+  auto vec = LoadRom("../src/roms/cpu_instrs.gb");
 
   gbc::Ram::Instance()->LoadRom(vec);
-  // std::cout << vec.size() << std::endl;
+   std::cout << vec.size() << std::endl;
   int i = 0;
-  while (i < 10000000)
+  while (i < 10000)
   {
     gbc::Cpu::Instance()->Execute();
     i++;
