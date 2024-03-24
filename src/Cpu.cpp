@@ -9,14 +9,14 @@
 namespace gbc
 {
 
-    Cpu::Cpu() : A(new register8_t(0xAA, "A")),
-                 B(new register8_t(0xAC, "B")),
-                 C(new register8_t(0xAD, "C")),
-                 D(new register8_t(0xFF, "D")),
-                 E(new register8_t(0xCD, "E")),
-                 F(new register8_t(0xDE, "F")),
-                 H(new register8_t(0xDE, "H")),
-                 L(new register8_t(0xAF, "L")),
+    Cpu::Cpu() : A(new register8_t(0x00, "A")),
+                 B(new register8_t(0x00, "B")),
+                 C(new register8_t(0x00, "C")),
+                 D(new register8_t(0x00, "D")),
+                 E(new register8_t(0x00, "E")),
+                 F(new register8_t(0x00, "F")),
+                 H(new register8_t(0x00, "H")),
+                 L(new register8_t(0x00, "L")),
                  PC(new Register16(0x100, "Program Counter")),
                  SP(new Register16(0xFFFE, "Stack Pointer")),
                  FLAGS(new flag_register_t(0x50, "Flag Register")),

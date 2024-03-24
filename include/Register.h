@@ -211,6 +211,7 @@ class Register
             for (int i = 0; i < reg.bits() ; i++)
                 out << (uint64_t) reg.BitAtMSB(i) << " ";
             out << "Hex: " << reg.Hex();
+            out << " Dec: " << (int) reg.value();
             return out;
         }
 
@@ -300,7 +301,7 @@ class lcd_control_register : public register8_t
 
 class lcd_status_register : public register8_t
 {
-        lcd_control_register(byte val) : Register(val, "LCD Control")
+        lcd_status_register(byte val) : Register(val, "LCD Control")
         {
             AssignBitName(6, "LY Coincidence Interrupt");
             AssignBitName(5, "Mode 2 OAM Interrupt");
