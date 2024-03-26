@@ -11,7 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
-//#include "PPU.h"
+#include "Ppu.h"
 //#include "Cpu.h"
 
 using namespace gbc;
@@ -33,35 +33,7 @@ void initlog()
         boost::log::trivial::severity >= boost::log::trivial::error
     );
 }
-uint16_t CoordsAsIndex(int x, int y, int row_width, int row_height)
-{
-  if (x > row_width)
-    std::runtime_error("X exceeds row width");
-  else if (y > row_height)
-    std::runtime_error("Y exceeds row height");
 
-  return y * row_width + x;
-}
-
-uint16_t TileDataIndex(int x, int y)
-{
-  return CoordsAsIndex(x, y, 8, 8);
-}
-
-uint16_t SpriteDataIndex(int x, int y, bool tall_sprite)
-{
-  return CoordsAsIndex(x, y, 8, tall_sprite ? 16 : 8);
-}
-
-uint16_t BgMapIndex(int x, int y)
-{
-  return CoordsAsIndex(x, y, ROW_WIDTH, ROW_WIDTH);
-}
-
-uint16_t ViewPortIndex(int x, int y)
-{
-  return CoordsAsIndex(x, y, 160, 144);
-}
 
 std::vector<byte> LoadRom(const std::string& file_path)
 {
@@ -129,67 +101,6 @@ void shit()
     // this is really just a 32x32 area in memory where the "TileNumber" for each tile is stored
     // The tile number is effectively an index into the Tile Data Map (the tile data map contains color info for each pixel in the 8x8 tile)
     // Ultimately the tile data is used to render the tiles for both the background and window grids
-    struct BackgroundMap
-    {
-        BackgroundMap();
-        int ROW_WIDTH = 32;
-        byte GetTileNumberAt(byte x, byte y)
-        {
-            // 1, 0
-            // need to get 32
-
-            // start_offset + (y * ROW_WIDTH + x)
-            
-
-        }
-        byte GetTileNumberAt(byte offset); // just start_offset + offset
-
-    };
-
-
-    void UpdateBuffers()
-    {
-        // maybe a basic loop will look like...
-        // for all tiles (32x32)
-        // get Tile Number from BackgroundMap
-        // Get tile_data[tile_number] 
-        // draw the tile into the buffer?? idrk
-    }
-
-    // there are 2 methods for this but just for now lets use "8000" method
-
-
-    struct TileData
-    {
-
-        TileData(std::array<byte, 16> buffer) 
-            : mBuffer(buffer)
-        {
-
-        }
-
-        std::array<byte, 16> mBuffer;
-
-        // this should return a 8x8 64 byte pixel map, where each represents a pixel/color in a tile
-        std::array<byte, 64> AsPixelMap()
-        {
-            std::array<byte, 64> ret;
-            for (int i = 0; i < mBuffer.size(); i+=2)
-            {
-                register8_t first = mBuffer[i];
-                register8_t second = mBuffer[i + 1];
-                for (int j = 0; j < 8; j++)
-                {
-                    uint8_t first_bit = first.BitAtMSB(i);
-                    uint8_t second_bit = second.BitAtMSB(i);
-                    // std::cout << "placing pixel of shade " << (int) ((second_bit << 1) | first_bit) << std::endl;
-                    ret[TileDataIndex(j, i/2)] = ((second_bit << 1) | first_bit);
-                }
-
-            }
-            return ret;
-        }
-    };
 
 
 
@@ -200,7 +111,7 @@ void DrawBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& buff)
     for (int x = 0; x < ROW_WIDTH; x++)
     { 
         byte c = buff[y * ROW_WIDTH + x];
-        if (c == '.')
+        if (c == '0')
         {
            std::cout << c;
         }
@@ -230,73 +141,34 @@ void DrawBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& buff)
   }
 }
 
-// there are 1024 tiles, 32 in each row. 
-void DrawTileAt(int tile_num, std::array <byte, ROW_WIDTH*ROW_WIDTH>& pixel_buff, std::array <byte, 64>& tile_buff) // 1024 tiles
+std::array <byte, ROW_WIDTH*ROW_WIDTH> BuffFromLines()
 {
-  // start_offset + (y * ROW_WIDTH + x)
-  // tile 2 would start at x = 8 and y = 0
-  // tile 33 would start at x = 0 y = 8
-  int tiles_per_row = ROW_WIDTH/8;
-  int start_x = (tile_num % tiles_per_row) * 8;
-  int start_y = (tile_num / tiles_per_row) * 8;
-  // std::cout << "starting tile " << tile_num << std::endl;
-  // std::cout << "start_x = " << start_x << std::endl;
-  // std::cout << "start_y = " << start_y << std::endl;
-
-
-  int tile_y = 0;
-  int tile_x = 0;
-  for (int y = start_y; y < (start_y + 8); y++)
+  std::array <byte, ROW_WIDTH*ROW_WIDTH> ret;
+  int f = 0;
+  for (int i = 0; i < 256; i++)
   {
-
-    for (int x = start_x; x < start_x + 8; x++)
+    auto tile_line = ReadTileLine(i);
+    for (auto& t : tile_line)
     {
-      // std::cout << "tile_x = " << tile_x << std::endl;
-      // std::cout << "tile_y = " << tile_y << std::endl;
-      // std::cout << "x = " << x << std::endl;
-      // std::cout << "y = " << y << std::endl;
-      // std::cout << "updating pixel at " << (y * ROW_WIDTH + x) << " to val " << (int) tile_buff[tile_y * 8 + tile_x] << std::endl;
-      pixel_buff[y * ROW_WIDTH + x] = tile_buff[tile_y * 8 + tile_x];
-      tile_x++;
+      ret[f] = t;
+      f++;
     }
-    tile_y++;
-    tile_x = 0;
   }
-}
-
-
-void DrawSpriteAt(int x, int y, std::array <byte, ROW_WIDTH*ROW_WIDTH>& pixel_buff, std::array <byte, 64>& sprite_buffer) // 1024 tiles
-{
-  // start_offset + (y * ROW_WIDTH + x)
-  // tile 2 would start at x = 8 and y = 0
-  // tile 33 would start at x = 0 y = 8
-  int tiles_per_row = ROW_WIDTH/8;
-  int start_x = x;
-  int start_y = y;
-  // std::cout << "start_x = " << start_x << std::endl;
-  // std::cout << "start_y = " << start_y << std::endl;
-
-
-  int tile_y = 0;
-  int tile_x = 0;
-  for (int y = start_y; y < (start_y + 8); y++)
+  // do the same thing for sprites
+  for (int i = 0; i < 40; i++)
   {
-
-    for (int x = start_x; x < start_x + 8; x++)
-    {
-      // std::cout << "tile_x = " << tile_x << std::endl;
-      // std::cout << "tile_y = " << tile_y << std::endl;
-      // std::cout << "x = " << x << std::endl;
-      // std::cout << "y = " << y << std::endl;
-      // std::cout << "updating pixel at " << (y * ROW_WIDTH + x) << std::endl;
-      pixel_buff[BgMapIndex(x, y)] = sprite_buffer[TileDataIndex(tile_x, tile_y)];
-      tile_x++;
-    }
-    tile_y++;
-    tile_x = 0;
+    auto sprite_block = ReadSpriteBlock(i);
+    byte y_pos = sprite_block[0] - 16;
+    byte x_pos = sprite_block[1] - 8;
+    byte tile_num = sprite_block[2];
+    byte flags = sprite_block[3];
+    auto tile_block = ReadTileDataBlock(tile_num);
+    TileData td(tile_block);
+    auto as_map = td.AsPixelMap();
+    DrawSpriteAt(x_pos, y_pos,ret, as_map);
   }
+  return ret;
 }
-
 static const int VP_WIDTH = 160;
 static const int VP_HEIGHT = 144;
 
@@ -321,80 +193,17 @@ void UpdateViewPort(int sx, int sy, std::array <byte, ROW_WIDTH*ROW_WIDTH>& back
     for (int vp_x = 0; vp_x < VP_WIDTH; vp_x++)
     {
       //// std::cout << " doing update vierwport" << std::endl;
-      vp_buff[ViewPortIndex(vp_x, vp_y)] = background[((sy * ROW_WIDTH) % ROW_WIDTH) + (sx % ROW_WIDTH)];
+      vp_buff[VPortI(vp_x, vp_y)] = background[((sy * ROW_WIDTH) % ROW_WIDTH) + (sx % ROW_WIDTH)];
       sx++;
     }
     sx = sx_copy;
     sy++;
   }
 }
-    std::array<byte, 16> ReadTileDataBlock(byte tile_number)
-    {
-        std::array<byte, 16> ret;
-        uint16_t start_offset = 0x8000 + (tile_number * 16);
 
-        for (uint16_t i = start_offset; i < start_offset + 16; i++)
-        {
-            register16_t tmp = i;
-            // std::cout << "attempting to read at " << tmp << std::endl;
-            ret[i - start_offset] = gbc::Ram::Instance()->ReadByte(i);
-            // std::cout << "getting here " << std::endl;
-        }
-        return ret;
-    }
 
-    std::array<byte, 4> ReadSpriteBlock(byte sprite_num)
-    {
-        std::array<byte, 4> ret;
-        uint16_t start_offset =  0xFE00 + (sprite_num * 4);
 
-        for (uint16_t i = start_offset; i < start_offset + 4; i++)
-        {
-            register16_t tmp = i;
-            // std::cout << "attempting to read at " << tmp << std::endl;
-            ret[i - start_offset] = gbc::Ram::Instance()->ReadByte(i);
-            // std::cout << "getting here " << std::endl;
-        }
-        return ret;
-    }
 
-// very basic loop for updating background pixel buffer tiles
-void UpdateBgBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
-{
-  int ok = 0;
-  // go through all 1024 tiles
-  for (int i = 0; i < 32; i++)
-  {
-  for (int j = 0; j < 32; j++)
-  {
-    // std::cout << "looking for tile_num of tile " << i << std::endl;
-    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(BgMapIndex(j, i));
-    // std::cout << "tile num is " << (int) tile_num << std::endl;
-    auto block = ReadTileDataBlock(tile_num);
-    // std::cout << "got a block " << std::endl;
-    TileData td(block);
-    auto blk = td.AsPixelMap();
-    // std::cout << "trying to draw block " << std::endl;
-    DrawTileAt(ok, background, blk);
-    ok++;
-  }
-  }
-  
-  // do the same thing for sprites
-  for (int i = 0; i < 40; i++)
-  {
-    auto sprite_block = ReadSpriteBlock(i);
-    byte y_pos = sprite_block[0] - 16;
-    byte x_pos = sprite_block[1] - 8;
-    byte tile_num = sprite_block[2];
-    byte flags = sprite_block[3];
-    auto tile_block = ReadTileDataBlock(tile_num);
-    TileData td(tile_block);
-    auto as_map = td.AsPixelMap();
-    DrawSpriteAt(x_pos, y_pos,background, as_map);
-  }
-  
-}
 void UpdateBgBufferTest(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
 {
   // go through all 1024 tiles
@@ -483,7 +292,7 @@ int main()
   std::array <byte, ROW_WIDTH*ROW_WIDTH> pixel_buffer;
   for (int i = 0; i < pixel_buffer.size(); i++)
 {
-  pixel_buffer[i] = '.';
+  pixel_buffer[i] = '0';
 }
   
   
@@ -493,6 +302,7 @@ int main()
   gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
   std::cout << vec.size() << std::endl;
   int i = 0;
+  /*
   while (i < 10000)
   {
     gbc::Cpu::Instance()->Execute();
@@ -514,23 +324,12 @@ int main()
 
 
   }
-  UpdateBgBuffer(pixel_buffer);
-//  DrawBuffer(pixel_buffer);
-
-  while (i < 5000000)
-  {
-    gbc::Cpu::Instance()->Execute();
-    i++;
-  }
-    auto window = sf::RenderWindow{ { ROW_WIDTH + 20, ROW_WIDTH + 20}, "CMake SFML Project" };
-    window.setFramerateLimit(30);
-    sf::Sprite sprite;
+*/
 
 
 
-    //while (cpu.mTickCount < 600)
-   //     cpu.Decode(cpu.Fetch());
-   while (i < 10000000)
+
+   while (i < 1000000)
    {
    // std::cout << "executed: " << i << std::endl;
     gbc::Cpu::Instance()->Execute();
@@ -538,14 +337,37 @@ int main()
     i++;
 
    }
+    // UpdateBgBuffer(pixel_buffer);
+ // DrawBuffer(pixel_buffer);
+    std::cout << "showing line" << std::endl;
+    auto a = ReadTileLine(18);
+    for (auto& b : a)
+      std::cout << (int) b;
+    std::cout << std::endl;
+     a = ReadTileLine(19);
+    for (auto& b : a)
+      std::cout << (int) b;
+    std::cout << std::endl;
+     a = ReadTileLine(20);
+    for (auto& b : a)
+      std::cout << (int) b;
+    std::cout << std::endl;
+     a = ReadTileLine(21);
+    for (auto& b : a)
+      std::cout << (int) b;
+    std::cout << std::endl;
+    int PIXEL_SCALE = 3;
+    auto window = sf::RenderWindow{ { ROW_WIDTH*PIXEL_SCALE, ROW_WIDTH *PIXEL_SCALE}, "Jomac Gameboy" };
+    window.setFramerateLimit(30);
+    sf::Sprite sprite;
     sf::Texture texture;
     sf::Sprite spr;
     sf::Image img;
-    img.create(256,256);
+    img.create( ROW_WIDTH*PIXEL_SCALE,ROW_WIDTH *PIXEL_SCALE);
     int executed = 0;
     int draws = 0;
 
-
+    pixel_buffer = BuffFromLines();
     while (window.isOpen())
     {
         for (auto event = sf::Event{}; window.pollEvent(event);)
@@ -555,8 +377,7 @@ int main()
               //  PrintPixels(cpu);
                 window.close();
             }
-        }
-      
+        }  
         window.clear();
         if (executed % 50000 == 0)
         {
@@ -565,34 +386,37 @@ int main()
             for (int j = 0; j < ROW_WIDTH; j++)
             {
 
-                    byte shade = pixel_buffer[BgMapIndex(j, i)];
+                    byte shade = pixel_buffer[BgMapI(j, i)];
                     sf::Color c;
                     if (shade == 0x00)
                     {
                       c = sf::Color(255, 255, 255);
-                     //   shape.setFillColor(sf::Color(255, 255, 255));
                     }
                     else if (shade == 0x01)
                     {
                      c = sf::Color(169, 169, 169);
-                       // shape.setFillColor(sf::Color(169, 169, 169));
                     }
                     else if (shade == 0x02)
                     {
                         c = sf::Color(84, 84, 84);
-                     //   shape.setFillColor(sf::Color(84, 84, 84));
                     }
                     else if (shade == 0x03)
                     {
                       c = sf::Color(0, 0, 0);
-                      //  shape.setFillColor(sf::Color(0, 0, 0));
                     }
                     else
                     {
                       c = sf::Color(0, 0, 0);
                     }
-    
-                    img.setPixel(j, i, c);
+
+                    for (int m = 0; m < PIXEL_SCALE; m++)
+                    {
+                    for (int n = 0; n < PIXEL_SCALE; n++)
+                    {
+                      img.setPixel(j * PIXEL_SCALE + n, i * PIXEL_SCALE + m, c);
+                    }
+                    }
+
                   //  window.draw(shape);
 
             }
@@ -605,5 +429,6 @@ int main()
         window.display();
         executed++;
     }
+    
     
 }
