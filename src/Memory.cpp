@@ -10,14 +10,25 @@ namespace gbc
         for (int i = 0; i < mMemory.size(); i ++)
         {
             mMemory[i] = 0x00;
-;        }
+         }
+    }
+
+    std::vector<byte> Ram::ReadBytesAt(const uint16_t start_offset, uint16_t n)
+    {
+        std::vector<byte> ret;
+        for (uint16_t i = start_offset; i < start_offset + n; i++)
+        {
+            ret.push_back(mMemory[i]);
+        }
+
+        return ret;
     }
 
    // Does not increment
     byte Ram::ReadByte(uint16_t address)
     {
         byte ret = mMemory[address];
-        BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address;
+      //  BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address;
         return ret;
     }
 
@@ -25,7 +36,7 @@ namespace gbc
     byte Ram::ReadByte(address16_t address)
     {
         byte ret = mMemory[address.value()];
-        BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
+      //  BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
         return ret;
     }
 
@@ -62,7 +73,7 @@ namespace gbc
         for (int i = 0; i < mMemory.size(); i ++)
         {
             mMemory[i] = 0x00;
-;       }
+        }
     }
 
     uint16_t Ram::ReadWordStack(address16_t address)
@@ -82,17 +93,17 @@ namespace gbc
         WriteByte(address, register8_t(value.Low()));
     }
 
+    uint8_t* Ram::ReadBytePtr(const uint16_t addr)
+    {
+        return &mMemory[addr];
+    }
+
+
     void Ram::LoadRom(const std::vector<byte>& rom_data)
     {
+        //std::memcpy(&mMemory[0], &rom_data[0], rom_data.size());
         for (int i = 0; i < rom_data.size(); i++)
             mMemory[i] = rom_data[i];
-     //   for (int i = 0x8000; i < 0xFFFF; i++)
-      //  {
-       //     register8_t val = mMemory[(i + 0x150) - 0x8000];
-        //    register16_t addr = i;
-         //   BOOST_LOG_TRIVIAL(debug) << " setting addr " << addr << " to " << val; 
-          //  mMemory[i] = mMemory[(i + 0x150) - 0x8000];
-        //}
     }
 
     std::shared_ptr<Ram> Ram::Instance()

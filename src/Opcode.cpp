@@ -2,6 +2,9 @@
 
 #include "Memory.h"
 #define CPU gbc::Cpu::Instance()
+#define OPCODE_KVP(op, desc, func, p1, cycles) {op, OpcodeCommand(desc, std::bind(&Opcode::func, this), cycles)}
+#define OPCODE_KVP_ONE(op, desc, func, p1, cycles) {op, OpcodeCommand(desc, std::bind(&Opcode::func, this, p1), cycles)}
+#define OPCODE_KVP_TWO(op, desc, func, p1, p2, cycles) {op, OpcodeCommand(desc, std::bind(&Opcode::func, this, p1, p2), cycles)}
 namespace gbc
 {
 
@@ -33,6 +36,7 @@ namespace gbc
             {
                 // 8-bit LD
                 // Load R1 into R2
+       //         OPCODE_KVP_TWO(0x75, "LDR1R2", LdR1R2, CPU->A, CPU->B, 4),
                 {0x7F, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->A, CPU->A), 4)},
                 {0x78, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->A, CPU->B), 4)},
                 {0x79, OpcodeCommand("LdR1R2", std::bind(&Opcode::LdR1R2, this, CPU->A, CPU->C), 4)},

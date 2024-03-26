@@ -4,6 +4,7 @@
 #include <array>
 #include "Register.h"
 #include <memory>
+#include <vector>
 namespace gbc
 {
 
@@ -98,19 +99,35 @@ namespace gbc
 
     }
 
+
+
     }
     }
     //  std::vector<byte> tendo_logo =
     //{ 0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
     // 0x00, 0x08, 0x11, 0x1F, 0x88, 0x89, 0x00, 0x0E, 0xDC, 0xCC, 0x6E, 0xE6, 0xDD, 0xDD, 0xD9, 0x99,
     // 0xBB, 0xBB, 0x67, 0x63, 0x6E, 0x0E, 0xEC, 0xCC, 0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E};
-
+    struct DisplayRegs
+    {
+        uint8_t* sx;
+        uint8_t* sy;
+        uint8_t* ly;
+        uint8_t* ly_comp;
+        uint8_t* wx;
+        uint8_t* wy;
+        uint8_t* bgp_palette;
+        uint8_t* obj_palette0;
+        uint8_t* obj_palette1;
+        uint8_t* dma_transfer;
+    };
     struct Ram
     {
 
     public:
         Ram();
         std::array<byte, 0xFFFF> GetMemory();
+
+        std::vector<byte> ReadBytesAt(const uint16_t start_offset, uint16_t n);
 
         byte ReadByte(uint16_t address);
 
@@ -132,6 +149,8 @@ namespace gbc
         void ClearMem();
 
         void LoadRom(const std::vector<byte>& rom_data);
+
+        uint8_t* ReadBytePtr(const uint16_t addr);
 
         static std::shared_ptr<Ram> Instance();
 

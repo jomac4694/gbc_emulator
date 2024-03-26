@@ -18,6 +18,8 @@ constexpr static uint16_t DISPLAY_LAYER_HEIGHT = 256;
 constexpr static uint16_t SPRITE_WIDTH = 8;
 constexpr static uint16_t SPRITE_HEIGHT = 8;
 
+constexpr static uint16_t MAX_SPRITES = 40;
+
 // Dimensions of a Tall Sprite/Obj
 constexpr static uint16_t TALL_SPRITE_WIDTH = 8;
 constexpr static uint16_t TALL_SPRITE_HEIGHT = 16;
@@ -31,6 +33,7 @@ constexpr static uint16_t TILE_BUFFER_SIZE = TILE_WIDTH * TILE_HEIGHT;
 constexpr static uint16_t DISPLAY_LAYER_SIZE = DISPLAY_LAYER_WIDTH * DISPLAY_LAYER_HEIGHT;
 constexpr static uint16_t SPRITE_BUFFER_SIZE = SPRITE_WIDTH * SPRITE_HEIGHT;
 constexpr static uint16_t TALL_SPRITE_BUFFER_SIZE = TALL_SPRITE_WIDTH * TALL_SPRITE_HEIGHT;
+constexpr static uint16_t DISPLAY_SIZE = VPORT_WIDTH * VPORT_HEIGHT;
 
 
 // flat buffers for pixel maps
@@ -38,6 +41,8 @@ typedef std::array<byte, TILE_BUFFER_SIZE> TileDataBuffer;
 typedef std::array<byte, DISPLAY_LAYER_SIZE> DisplayLayerBuffer;
 typedef std::array<byte, SPRITE_BUFFER_SIZE> SpriteBuffer;
 typedef std::array<byte, TALL_SPRITE_BUFFER_SIZE> TallSpriteBuffer;
+
+
 
 uint16_t CoordsAsIndex(int x, int y, int row_width, int row_height)
 {
@@ -68,6 +73,61 @@ uint16_t VPortI(int x, int y)
 {
   return CoordsAsIndex(x, y, VPORT_WIDTH, VPORT_HEIGHT);
 }
+
+struct Sprite
+{
+    uint8_t x_pos;
+    uint8_t y_pos;
+    uint8_t tile_index;
+    uint8_t flags;
+};
+
+std::vector<byte> ReadTileLine(byte y)
+{
+    std::vector<byte> ret;
+    for (int i = 0; i < 32; i++)
+    {
+      uint8_t tile_num = gbc::Ram::Instance()->ReadByte(0x9800 + ((y / 8) * 32) + i);
+
+      uint16_t tile_data_start = 0x8000 + (16*tile_num) + ((y%8)*2);
+      register8_t byte1 = gbc::Ram::Instance()->ReadByte(tile_data_start);
+      register8_t byte2 = gbc::Ram::Instance()->ReadByte(tile_data_start + 1);
+      for (int j = 0; j < 8; j++)
+      {
+        uint8_t lsb = byte1.BitAtMSB(i);
+        uint8_t msb = byte2.BitAtMSB(i);
+        // std::cout << "placing pixel of shade " << (int) ((second_bit << 1) | first_bit) << std::endl;
+        ret.push_back((msb << 1) | lsb);
+      }
+    }
+    return ret;
+}
+void DrawBgScanline()
+{
+    // scanline == 100 = y
+    // start_y = y + scroll_y
+    // start_x = 0 + scroll_x;
+    // 
+    // get tile data at y
+
+}
+std::vector<Sprite> ReadSprites()
+{
+    std::vector<Sprite> ret;
+
+    for (uint16_t i = MemoryMap::OFFSET_OBJECT_ATTR_MEM_START; i < MAX_SPRITES; i+=4)
+    {
+        auto sprite_data = gbc::Ram::Instance()->ReadBytesAt(i, 4);
+        Sprite sprite;
+        sprite.y_pos = sprite_data[0];
+        sprite.x_pos = sprite_data[1];
+        sprite.tile_index = sprite_data[2];
+        sprite.flags = sprite_data[3];
+        ret.push_back(sprite);
+    }
+    return ret;
+}
+
 
 // there are 1024 tiles, 32 in each row. 
 void DrawTileAt(int tile_num, DisplayLayerBuffer& pixel_buff, const TileDataBuffer& tile_buff) // 1024 tiles

@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
+//#include "PPU.h"
 //#include "Cpu.h"
 
 using namespace gbc;
@@ -367,7 +368,7 @@ void UpdateBgBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
   for (int j = 0; j < 32; j++)
   {
     // std::cout << "looking for tile_num of tile " << i << std::endl;
-    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(0x9800 + ok);
+    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(BgMapIndex(j, i));
     // std::cout << "tile num is " << (int) tile_num << std::endl;
     auto block = ReadTileDataBlock(tile_num);
     // std::cout << "got a block " << std::endl;
@@ -492,33 +493,29 @@ int main()
   gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
   std::cout << vec.size() << std::endl;
   int i = 0;
-  /*
-  while (i < 1000000)
+  while (i < 10000)
   {
     gbc::Cpu::Instance()->Execute();
     i++;
-    register8_t lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF41), "LCDC Status");
+    register8_t lcdc1 = register8_t(*d_regs.ly_comp, "LCDC Status");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
     lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF42), "Scroll Y");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
     lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF43), "Scroll X");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
-    lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF44), "LCDC Y Coord");
+    lcdc1 = register8_t(*d_regs.ly, "LCDC Y Coord");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
     lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF4A), "Window Y");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
     lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF4B), "Window X");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
-    lcdc1 = register8_t(gbc::Ram::Instance()->ReadByte(0xFF40), "LCDC control");
+    lcdc1 = register8_t(*d_regs.sx, "LCDC control");
     BOOST_LOG_TRIVIAL(debug) << lcdc1;
 
 
   }
-  
   UpdateBgBuffer(pixel_buffer);
-  DrawBuffer(pixel_buffer);
-  DumpMem();
-  */
+//  DrawBuffer(pixel_buffer);
 
   while (i < 5000000)
   {
@@ -526,17 +523,31 @@ int main()
     i++;
   }
     auto window = sf::RenderWindow{ { ROW_WIDTH + 20, ROW_WIDTH + 20}, "CMake SFML Project" };
-    window.setFramerateLimit(100);
+    window.setFramerateLimit(30);
     sf::Sprite sprite;
+
 
 
     //while (cpu.mTickCount < 600)
    //     cpu.Decode(cpu.Fetch());
+   while (i < 10000000)
+   {
+   // std::cout << "executed: " << i << std::endl;
+    gbc::Cpu::Instance()->Execute();
+    //UpdateBgBuffer(pixel_buffer);
+    i++;
+
+   }
+    sf::Texture texture;
+    sf::Sprite spr;
+    sf::Image img;
+    img.create(256,256);
+    int executed = 0;
+    int draws = 0;
+
 
     while (window.isOpen())
     {
-        gbc::Cpu::Instance()->Execute();
-        UpdateBgBuffer(pixel_buffer);
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
             if (event.type == sf::Event::Closed)
@@ -545,38 +556,54 @@ int main()
                 window.close();
             }
         }
-
+      
         window.clear();
-        
+        if (executed % 50000 == 0)
+        {
         for (int i = 0; i < ROW_WIDTH; i++)
         {
             for (int j = 0; j < ROW_WIDTH; j++)
             {
-                    sf::CircleShape shape(1 * DISPLAY_SCALE);
+
                     byte shade = pixel_buffer[BgMapIndex(j, i)];
+                    sf::Color c;
                     if (shade == 0x00)
                     {
-                        shape.setFillColor(sf::Color(255, 255, 255));
+                      c = sf::Color(255, 255, 255);
+                     //   shape.setFillColor(sf::Color(255, 255, 255));
                     }
                     else if (shade == 0x01)
                     {
-                        shape.setFillColor(sf::Color(169, 169, 169));
+                     c = sf::Color(169, 169, 169);
+                       // shape.setFillColor(sf::Color(169, 169, 169));
                     }
                     else if (shade == 0x02)
                     {
-                        shape.setFillColor(sf::Color(84, 84, 84));
+                        c = sf::Color(84, 84, 84);
+                     //   shape.setFillColor(sf::Color(84, 84, 84));
                     }
                     else if (shade == 0x03)
                     {
-                        shape.setFillColor(sf::Color(0, 0, 0));
+                      c = sf::Color(0, 0, 0);
+                      //  shape.setFillColor(sf::Color(0, 0, 0));
                     }
-                    shape.setPosition(j, i);
-                    window.draw(shape);
+                    else
+                    {
+                      c = sf::Color(0, 0, 0);
+                    }
+    
+                    img.setPixel(j, i, c);
+                  //  window.draw(shape);
 
             }
         }
-        
+        }
+        texture.loadFromImage(img);
+        sprite.setTexture(texture, true);
+        window.draw(sprite);
         
         window.display();
+        executed++;
     }
+    
 }
