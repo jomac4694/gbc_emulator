@@ -201,31 +201,31 @@ void DrawBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& buff)
         byte c = buff[y * ROW_WIDTH + x];
         if (c == '.')
         {
-          // std::cout << c;
+           std::cout << c;
         }
         else if ( c == 0x01)
         {
-            // std::cout << '$';
+             std::cout << '$';
         }
         else if ( c == 0x02)
         {
-            // std::cout << '#';
+             std::cout << '#';
         }
         else if ( c == 0x03)
         {
-            // std::cout << '@';
+             std::cout << '@';
         }
         else if ( c == 0x00)
         {
-            // std::cout << '.';
+             std::cout << '.';
         }
         else
         {
-          // std::cout << (int) buff[y * ROW_WIDTH + x];
+           std::cout << (int) buff[y * ROW_WIDTH + x];
         }
     }
    // // std::cout << "this draw" << std::endl;
-    // std::cout << std::endl;
+     std::cout << std::endl;
   }
 }
 
@@ -367,7 +367,7 @@ void UpdateBgBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
   for (int j = 0; j < 32; j++)
   {
     // std::cout << "looking for tile_num of tile " << i << std::endl;
-    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(BgMapIndex(j, i));
+    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(0x9800 + ok);
     // std::cout << "tile num is " << (int) tile_num << std::endl;
     auto block = ReadTileDataBlock(tile_num);
     // std::cout << "got a block " << std::endl;
@@ -378,7 +378,7 @@ void UpdateBgBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
     ok++;
   }
   }
-  /*
+  
   // do the same thing for sprites
   for (int i = 0; i < 40; i++)
   {
@@ -392,7 +392,7 @@ void UpdateBgBuffer(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
     auto as_map = td.AsPixelMap();
     DrawSpriteAt(x_pos, y_pos,background, as_map);
   }
-  */
+  
 }
 void UpdateBgBufferTest(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
 {
@@ -408,6 +408,17 @@ void UpdateBgBufferTest(std::array <byte, ROW_WIDTH*ROW_WIDTH>& background)
     auto blk = td.AsPixelMap();
     // std::cout << "trying to draw block " << std::endl;
     DrawTileAt(i, background, blk);
+  }
+}
+
+void DumpMem()
+{
+  for (uint16_t i = 0x8000; i < 0x8FFF; i++)
+  {
+    register8_t t = gbc::Ram::Instance()->ReadByte(i);
+    std::cout << t.Hex() << " ";
+    if ((i - 0x8000) % 32 == 0)
+      std::cout << std::endl;
   }
 }
 void test_stuffppu()
@@ -467,7 +478,7 @@ for (int i = 0; i < tile_buffer.size(); i++)
 }
 int main()
 {
-initlog();
+  initlog();
   std::array <byte, ROW_WIDTH*ROW_WIDTH> pixel_buffer;
   for (int i = 0; i < pixel_buffer.size(); i++)
 {
@@ -475,12 +486,14 @@ initlog();
 }
   
   
-  auto vec = LoadRom("../src/roms/cpu_instrs.gb");
+  auto vec = LoadRom("../src/roms/dmg-acid2.gb");
 
   gbc::Ram::Instance()->LoadRom(vec);
-   std::cout << vec.size() << std::endl;
+  gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
+  std::cout << vec.size() << std::endl;
   int i = 0;
-  while (i < 10000)
+  /*
+  while (i < 1000000)
   {
     gbc::Cpu::Instance()->Execute();
     i++;
@@ -501,13 +514,20 @@ initlog();
 
 
   }
+  
   UpdateBgBuffer(pixel_buffer);
-//  DrawBuffer(pixel_buffer);
+  DrawBuffer(pixel_buffer);
+  DumpMem();
+  */
 
+  while (i < 5000000)
+  {
+    gbc::Cpu::Instance()->Execute();
+    i++;
+  }
     auto window = sf::RenderWindow{ { ROW_WIDTH + 20, ROW_WIDTH + 20}, "CMake SFML Project" };
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(100);
     sf::Sprite sprite;
-
 
 
     //while (cpu.mTickCount < 600)
@@ -515,6 +535,8 @@ initlog();
 
     while (window.isOpen())
     {
+        gbc::Cpu::Instance()->Execute();
+        UpdateBgBuffer(pixel_buffer);
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
             if (event.type == sf::Event::Closed)

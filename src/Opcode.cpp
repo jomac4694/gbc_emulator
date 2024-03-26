@@ -619,7 +619,7 @@ namespace gbc
     void Opcode::LdReadByte(std::shared_ptr<register8_t> r1)
     {
         byte read = CPU->GetByteFromPC();
-        *r1 = read;
+        r1->Set(read);
     }
 
     // 1. LD nn, n
