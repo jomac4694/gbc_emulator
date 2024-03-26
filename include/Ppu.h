@@ -2,10 +2,12 @@
 #define PPU_H
 #include <array>
 #include "Register.h"
-
+#include "DisplayBuffer.h"
+#include "Memory.h"
 // this probably going to be a temporary monolith of all the ppu functionality
 namespace gbc
 {
+
 // Dimnensions of a Tile
 constexpr static uint16_t TILE_WIDTH = 8;
 constexpr static uint16_t TILE_HEIGHT = 8;
@@ -25,336 +27,93 @@ constexpr static uint16_t TALL_SPRITE_WIDTH = 8;
 constexpr static uint16_t TALL_SPRITE_HEIGHT = 16;
 
 // Dimensions of GB Viewport (display the user actually sees)
-constexpr static uint16_t VPORT_WIDTH = 160;
-constexpr static uint16_t VPORT_HEIGHT = 144;
+constexpr static uint16_t LCD_WIDTH = 160;
+constexpr static uint16_t LCD_HEIGHT = 144;
 
 // Buffer sizes
 constexpr static uint16_t TILE_BUFFER_SIZE = TILE_WIDTH * TILE_HEIGHT;
 constexpr static uint32_t DISPLAY_LAYER_SIZE = DISPLAY_LAYER_WIDTH * DISPLAY_LAYER_HEIGHT;
 constexpr static uint16_t SPRITE_BUFFER_SIZE = SPRITE_WIDTH * SPRITE_HEIGHT;
 constexpr static uint16_t TALL_SPRITE_BUFFER_SIZE = TALL_SPRITE_WIDTH * TALL_SPRITE_HEIGHT;
-constexpr static uint16_t DISPLAY_SIZE = VPORT_WIDTH * VPORT_HEIGHT;
+constexpr static uint16_t LCD_DISPLAY_SIZE = LCD_WIDTH * LCD_HEIGHT;
 
-
-// flat buffers for pixel maps
-typedef std::array<byte, TILE_BUFFER_SIZE> TileDataBuffer;
-typedef std::array<byte, DISPLAY_LAYER_SIZE> DisplayLayerBuffer;
-typedef std::array<byte, SPRITE_BUFFER_SIZE> SpriteBuffer;
-typedef std::array<byte, TALL_SPRITE_BUFFER_SIZE> TallSpriteBuffer;
-
-
-
-uint16_t CoordsAsIndex(int x, int y, int row_width, int row_height)
-{
-  if (x > row_width)
-    std::runtime_error("X exceeds row width");
-  else if (y > row_height)
-    std::runtime_error("Y exceeds row height");
-
-  return y * row_width + x;
-}
-
-uint16_t TileDataI(int x, int y)
-{
-  return CoordsAsIndex(x, y, TILE_WIDTH, TILE_HEIGHT);
-}
-
-uint16_t SpriteDataI(int x, int y, bool tall_sprite = false)
-{
-  return CoordsAsIndex(x, y, SPRITE_WIDTH, tall_sprite ? TALL_SPRITE_HEIGHT : SPRITE_HEIGHT);
-}
-
-uint16_t BgMapI(int x, int y)
-{
-  return CoordsAsIndex(x, y, DISPLAY_LAYER_WIDTH, DISPLAY_LAYER_HEIGHT);
-}
-
-uint16_t VPortI(int x, int y)
-{
-  return CoordsAsIndex(x, y, VPORT_WIDTH, VPORT_HEIGHT);
-}
-// there are 1024 tiles, 32 in each row. 
-void DrawTileAt(int tile_num, DisplayLayerBuffer& pixel_buff, const TileDataBuffer& tile_buff) // 1024 tiles
-{
-  // start_offset + (y * ROW_WIDTH + x)
-  // tile 2 would start at x = 8 and y = 0
-  // tile 33 would start at x = 0 y = 8
-  int tiles_per_row = DISPLAY_LAYER_WIDTH / 8;
-  int start_x = (tile_num % tiles_per_row) * 8;
-  int start_y = (tile_num / tiles_per_row) * 8;
-  // std::cout << "starting tile " << tile_num << std::endl;
-  // std::cout << "start_x = " << start_x << std::endl;
-  // std::cout << "start_y = " << start_y << std::endl;
-
-
-  int tile_y = 0;
-  int tile_x = 0;
-  for (int y = start_y; y < (start_y + TILE_HEIGHT); y++)
+constexpr static uint16_t BG_TILES_PER_ROW = 32;
+constexpr static uint16_t LCD_TILES_PER_ROW = 20;
+constexpr static uint16_t LCD_TILES_PER_COL = 18;
+constexpr static uint16_t BYTES_PER_TILE = 16;
+    typedef std::array<byte, SPRITE_BUFFER_SIZE> SpriteBuffer;
+  enum PpuMode
   {
+    H_BLANK,
+    V_BLANK,
+    OAM_SCAN,
+    DRAW
+  };
 
-    for (int x = start_x; x < start_x + TILE_WIDTH; x++)
-    {
-      // std::cout << "tile_x = " << tile_x << std::endl;
-      // std::cout << "tile_y = " << tile_y << std::endl;
-      // std::cout << "x = " << x << std::endl;
-      // std::cout << "y = " << y << std::endl;
-      // std::cout << "updating pixel at " << (y * ROW_WIDTH + x) << " to val " << (int) tile_buff[tile_y * 8 + tile_x] << std::endl;
-      pixel_buff[BgMapI(x, y)] = tile_buff[TileDataI(tile_x, tile_y)];
-      tile_x++;
-    }
-    tile_y++;
-    tile_x = 0;
-  }
-}
-
-
-void DrawSpriteAt(int x, int y, DisplayLayerBuffer& pixel_buff, const SpriteBuffer& sprite_buffer) // 1024 tiles
-{
-  // start_offset + (y * ROW_WIDTH + x)
-  // tile 2 would start at x = 8 and y = 0
-  // tile 33 would start at x = 0 y = 8
-  int start_x = x;
-  int start_y = y;
-  // std::cout << "start_x = " << start_x << std::endl;
-  // std::cout << "start_y = " << start_y << std::endl;
-
-
-  int sprite_y = 0;
-  int sprite_x = 0;
-  for (int y = start_y; y < (start_y + SPRITE_HEIGHT); y++)
+  class Ppu
   {
+    public:
+      void DumpBufferDebug();
+      Ppu();
+      // perform a single ppu tick
+      void Tick();
+      void RegisterDrawCallback(std::function<void(const DisplayBuffer&)> func);
+    private:
+      void ReadBgTileLine(const byte y);
+      
+      // Read a single scan line of tile data from Window layer and copy to the LCD buffer
+      // should return a 256 byte vector
+      std::vector<byte> ReadWindowTileLine(const byte y);
 
-    for (int x = start_x; x < start_x + SPRITE_WIDTH; x++)
-    {
-      // std::cout << "tile_x = " << tile_x << std::endl;
-      // std::cout << "tile_y = " << tile_y << std::endl;
-      // std::cout << "x = " << x << std::endl;
-      // std::cout << "y = " << y << std::endl;
-      // std::cout << "updating pixel at " << (y * ROW_WIDTH + x) << std::endl;
-      pixel_buff[BgMapI(x, y)] = sprite_buffer[SpriteDataI(sprite_x, sprite_y)];
-      sprite_x++;
-    }
-    sprite_y++;
-    sprite_x = 0;
-  }
-}
-void PrintTile(const TileDataBuffer& buff)
-{
-  for (int y = 0; y < 8; y++)
-  {
-    for (int x = 0; x < 8; x++)
-    {
-      std::cout << (int) buff[TileDataI(x, y)];
-    }
-    std::cout << std::endl;
-  }
-}
-std::array<byte, 4> ReadSpriteBlock(byte sprite_num)
-{
-    std::array<byte, 4> ret;
-    uint16_t start_offset =  0xFE00 + (sprite_num * 4);
+      // do mode stuff functions
+      void ModeOAMScan();
+      void ModeHBlank();
+      void ModeDraw();
+      void ModeVBlank();
 
-    for (uint16_t i = start_offset; i < start_offset + 4; i++)
-    {
-        register16_t tmp = i;
-        // std::cout << "attempting to read at " << tmp << std::endl;
-        ret[i - start_offset] = gbc::Ram::Instance()->ReadByte(i);
-        // std::cout << "getting here " << std::endl;
-    }
-    return ret;
-}
-struct Sprite
-{
-    uint8_t x_pos;
-    uint8_t y_pos;
-    uint8_t tile_index;
-    uint8_t flags;
-};
-struct TileData
-{
+      // Read and draw the sprite at sprite_index
+      void DrawSprite(uint16_t sprite_index); 
 
-    TileData(std::array<byte, 16> buffer) 
-        : mBuffer(buffer)
-    {
+      void LcdControlUpdate();
 
-    }
+      byte* mLcdStatus; // I think the ppu controls this
+      byte* mLcdControl; // I think the cpu controls this
 
-    std::array<byte, 16> mBuffer;
+      byte* mSx;
+      byte* mSy;
 
-    // this should return a 8x8 64 byte pixel map, where each represents a pixel/color in a tile
-    std::array<byte, 64> AsPixelMap()
-    {
-        std::array<byte, 64> ret;
-        int k = 0;
-        for (int i = 0; i < mBuffer.size(); i+=2)
-        {
-            register8_t first = mBuffer[i];
-            register8_t second = mBuffer[i + 1];
-            for (int j = 0; j < 8; j++)
-            {
-                uint8_t first_bit = first.BitAtMSB(j);
-                uint8_t second_bit = second.BitAtMSB(j);
-                // std::cout << "placing pixel of shade " << (int) ((second_bit << 1) | first_bit) << std::endl;
-                ret[k] = ((second_bit << 1) | first_bit);
-                k++;
-            }
+      byte* mWx;
+      byte* mWy;
 
-        }
-        return ret;
-    }
-};
+      byte mCurrentScanline{0};
 
-std::array<byte, 16> ReadTileDataBlock(byte tile_number)
-{
-    std::array<byte, 16> ret;
-    uint16_t start_offset = 0x8000 + (tile_number * 16);
-  address16_t d = start_offset;
-  std::cout << "getting tile data from addr in read tiledatablock " << d << std::endl;
-    for (uint16_t i = start_offset; i < start_offset + 16; i++)
-    {
-        register16_t tmp = i;
-        register8_t tmpers = gbc::Ram::Instance()->ReadByte(i);
-        // std::cout << "attempting to read at " << tmp << std::endl;
-        ret[i - start_offset] = tmpers.value();
-        std::cout << "added byte: " << tmpers << std::endl;
-    }
-    return ret;
-}
-std::vector<byte> ReadTileLine(byte y)
-{
-    std::vector<byte> ret;
-    for (int i = 0; i < 32; i++)
-    {
-      address16_t addr = (0x9800 + ((y / 8) * 32) + i);
-      std::cout << "getting tile num from addr " << addr << std::endl;
-      uint8_t tile_num = gbc::Ram::Instance()->ReadByte(0x9800 + (((y / 8) * 32) + i));
-      std::cout << "got tile num " << (int) tile_num << std::endl;
-      auto til = ReadTileDataBlock(tile_num);
-      TileData p(til);
-      PrintTile(p.AsPixelMap());
-      uint16_t tile_data_start = 0x8000 + (16*tile_num) + ((y%8)*2);
-      address16_t d = tile_data_start;
-      std::cout << "getting tile data from addr " << d << std::endl;
-      register8_t byte1 = gbc::Ram::Instance()->ReadByte(tile_data_start);
-      std::cout << "byte1: " << byte1 << std::endl;
+      PpuMode mCurrMode{PpuMode::OAM_SCAN};
 
-      register8_t byte2 = gbc::Ram::Instance()->ReadByte(tile_data_start + 1);
-      std::cout << "byte2: " << byte2 << std::endl;
-      for (int j = 0; j < 8; j++)
-      {
-        uint8_t lsb = byte1.BitAtMSB(j);
-        uint8_t msb = byte2.BitAtMSB(j);
-        std::cout << "pushing " << (int) msb << (int) lsb << std::endl;
-        // std::cout << "placing pixel of shade " << (int) ((second_bit << 1) | first_bit) << std::endl;
-        ret.push_back(((msb << 1) | lsb));
-      }
-    }
-    return ret;
-}
+      // the main LCD display buffer (160x144 pixels 20x18 tiles)
+      DisplayBuffer mLcdBuffer;
+
+      // Status bits, i dont think all are needed
+      bool mLcdEnabled{false};
+      bool mWindowMapSelect{false};
+      bool mWindowEnable{false};
+      bool mTileDataSelect{false};
+      bool mBgTileMapSelect{false};
+      bool mSpriteSizeFlag{false};
+      bool mSpriteEnable{false};
+      bool mBgWindowEnable{false};
+
+      // offsets
+      uint16_t mWindowBgMapOffset;
+      uint16_t mBgTileMapOffset;
+      uint16_t mTileDataSelectOffset;
+
+      // should draw the current frame to the actual GUI
+      std::function<void(const DisplayBuffer&)> mDrawCallback;
+      void DrawSpriteAt(int x, int y, const SpriteBuffer& sprite_buffer);
 
 
 
-// very basic loop for updating background pixel buffer tiles
-void UpdateBgBuffer(std::array <byte, DISPLAY_LAYER_WIDTH*DISPLAY_LAYER_WIDTH>& background)
-{
-  int ok = 0;
-  // go through all 1024 tiles
-  for (int i = 0; i < 32; i++)
-  {
-  for (int j = 0; j < 32; j++)
-  {
-    std::cout << "looking for tile_num of tile " << ok << std::endl;
-    std::cout << "looking for tile_num of tile at y: " << i << " x: " << j << std::endl;
-    uint8_t tile_num = gbc::Ram::Instance()->ReadByte(0x9800 + ok);
-    address16_t t = 0x9800 + ok;
-     std::cout << "tile num is " << (int) tile_num << " from " << t << std::endl;
-    auto block = ReadTileDataBlock(tile_num);
-    // std::cout << "got a block " << std::endl;
-    TileData td(block);
-    auto blk = td.AsPixelMap();
-    PrintTile(blk);
-    // std::cout << "trying to draw block " << std::endl;
-    DrawTileAt(ok, background, blk);
-    ok++;
-  }
-  }
-
-  // do the same thing for sprites
-  for (int i = 0; i < 40; i++)
-  {
-    auto sprite_block = ReadSpriteBlock(i);
-    byte y_pos = sprite_block[0] - 16;
-    byte x_pos = sprite_block[1] - 8;
-    byte tile_num = sprite_block[2];
-    byte flags = sprite_block[3];
-    auto tile_block = ReadTileDataBlock(tile_num);
-    TileData td(tile_block);
-    auto as_map = td.AsPixelMap();
-    DrawSpriteAt(x_pos, y_pos,background, as_map);
-  }
-
-}
-
-
-void DrawBgScanline()
-{
-    // scanline == 100 = y
-    // start_y = y + scroll_y
-    // start_x = 0 + scroll_x;
-    // 
-    // get tile data at y
-
-}
-std::vector<Sprite> ReadSprites()
-{
-    std::vector<Sprite> ret;
-
-    for (uint16_t i = MemoryMap::OFFSET_OBJECT_ATTR_MEM_START; i < MAX_SPRITES; i+=4)
-    {
-        auto sprite_data = gbc::Ram::Instance()->ReadBytesAt(i, 4);
-        Sprite sprite;
-        sprite.y_pos = sprite_data[0];
-        sprite.x_pos = sprite_data[1];
-        sprite.tile_index = sprite_data[2];
-        sprite.flags = sprite_data[3];
-        ret.push_back(sprite);
-    }
-    return ret;
-}
-
-
-
-// Draw a ssprite at the specified coordinates in the given displayer layer buffer (probably the Window or Background)
-void DrawTallSpriteAt(int x, int y, DisplayLayerBuffer& pixel_buff, const TallSpriteBuffer& sprite_buffer) // 1024 tiles
-{
-  // start_offset + (y * ROW_WIDTH + x)
-  // tile 2 would start at x = 8 and y = 0
-  // tile 33 would start at x = 0 y = 8
-  int start_x = x;
-  int start_y = y;
-  // std::cout << "start_x = " << start_x << std::endl;
-  // std::cout << "start_y = " << start_y << std::endl;
-
-
-  int sprite_y = 0;
-  int sprite_x = 0;
-  for (int y = start_y; y < (start_y + TALL_SPRITE_HEIGHT); y++)
-  {
-
-    for (int x = start_x; x < start_x + TALL_SPRITE_WIDTH; x++)
-    {
-      // std::cout << "tile_x = " << tile_x << std::endl;
-      // std::cout << "tile_y = " << tile_y << std::endl;
-      // std::cout << "x = " << x << std::endl;
-      // std::cout << "y = " << y << std::endl;
-      // std::cout << "updating pixel at " << (y * ROW_WIDTH + x) << std::endl;
-      pixel_buff[BgMapI(x, y)] = sprite_buffer[SpriteDataI(sprite_x, sprite_y)];
-      sprite_x++;
-    }
-    sprite_y++;
-    sprite_x = 0;
-  }
-}
+  };
 
 }
 #endif

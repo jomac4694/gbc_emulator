@@ -35,6 +35,8 @@ set(SOURCES
     "src/Memory.cpp"
  #   "src/Register.cpp"
     "src/Utils.cpp"
+    "src/DisplayBuffer.cc"
+    "src/Ppu.cpp"
 )
 
 ####### library ########
