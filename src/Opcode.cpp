@@ -1160,12 +1160,12 @@ namespace gbc
     // disable interrupts
     void Opcode::DI()
     {
-        // set a flag?
+        CPU->Instance()->SetIME(false);
     }
     // enable interrupts
     void Opcode::EI()
     {
-        // set a flag?
+        CPU->Instance()->SetIME(true);
     }
 
     void Opcode::RlcA(std::shared_ptr<register8_t> r1)

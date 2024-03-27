@@ -13,6 +13,7 @@ using namespace gbc;
 // TESTS WERE AUTO GENERATED
 // Test JSON taken from https://github.com/raddad772/jsmoo/tree/main/misc/tests/GeneratedTests/sm83
 
+// test cases are repetitive, use a macro
 #define MAKE_CPU_TEST(filepath, opcode) \
 BOOST_AUTO_TEST_CASE(opcode) \
 { \
@@ -125,6 +126,8 @@ void CheckFinalState(const Expected& e, const boost::property_tree::ptree::value
 		BOOST_CHECK_EQUAL(e.memory[addr], gbc::Ram::Instance()->ReadByte(addr));
     }
 }
+
+// Each json file contains many test cases with initial and expected values for registers and memory
 MAKE_CPU_TEST("../tests/v1/cb 3e.json",cpu_opcode_CB3E)
 MAKE_CPU_TEST("../tests/v1/3d.json",cpu_opcode_3D)
 MAKE_CPU_TEST("../tests/v1/fe.json",cpu_opcode_FE)

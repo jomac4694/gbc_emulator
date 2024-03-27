@@ -87,7 +87,15 @@ public:
     std::shared_ptr<Register16> DE;
     std::shared_ptr<Register16> HL;
 
-    
+    void SetIME(bool val);
+    void SetIF(bool val);
+
+    void ProcessInterrupts();
+    bool mVblankInt{false};
+
+private:
+    bool mInterruptFlag{false};
+    bool mMasterInterrupt{false};    
 };
 }
 #endif

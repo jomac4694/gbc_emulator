@@ -42,7 +42,7 @@ struct Opcode
 
     Opcode();
 
-    std::map<uint16_t, OpcodeCommand> opcode_map;
+    std::unordered_map<uint16_t, OpcodeCommand> opcode_map;
 
     // 1. LD nn, n
     void LdReadByte(std::shared_ptr<register8_t> r1);

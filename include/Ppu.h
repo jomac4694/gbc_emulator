@@ -61,9 +61,7 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
     private:
       void ReadBgTileLine(const byte y);
       
-      // Read a single scan line of tile data from Window layer and copy to the LCD buffer
-      // should return a 256 byte vector
-      std::vector<byte> ReadWindowTileLine(const byte y);
+      void ReadWindowTileLine(const byte y);
 
       // do mode stuff functions
       void ModeOAMScan();
@@ -78,6 +76,8 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
 
       byte* mLcdStatus; // I think the ppu controls this
       byte* mLcdControl; // I think the cpu controls this
+      byte* mLyc;
+      byte* mLy;
 
       byte* mSx;
       byte* mSy;

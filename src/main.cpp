@@ -147,7 +147,6 @@ int main()
   while (true)
   {
   //  std::cout << "fired: " << fired << std::endl;
-
     if (!window->isOpen())
     {
       p.DumpBufferDebug();
@@ -156,6 +155,8 @@ int main()
     else
     {
       gbc::Cpu::Instance()->Execute();
+      p.Tick();
+      p.Tick();
       p.Tick();
     }
   }

@@ -29,6 +29,7 @@ namespace gbc
 
     void Cpu::Execute()
     {
+        ProcessInterrupts();
         byte next_byte = GetByteFromPC();
         
         if (next_byte == 0xCB)
@@ -102,6 +103,38 @@ namespace gbc
     {
         gbc::Ram::Instance()->WriteWord(PC->value(), value);
         PC->Set(PC->value() + 2);
+    }
+
+    void Cpu::SetIME(bool val)
+    {
+        mMasterInterrupt = val;
+    }
+
+    void Cpu::SetIF(bool val)
+    {
+        mInterruptFlag = val;
+    }
+
+    void Cpu::ProcessInterrupts()
+    {
+        // just do the coincidence for now....
+        if (mMasterInterrupt && mInterruptFlag)
+        {
+            if (mVblankInt)
+            {
+            StackPush(PC->value());
+            PC->Set(0x0040);
+            mVblankInt = false;
+            }
+            else
+            {
+            StackPush(PC->value());
+            PC->Set(0x0048);
+            }
+
+            mInterruptFlag = false;
+            mMasterInterrupt = false;
+        }
     }
 
     std::shared_ptr<Cpu> Cpu::Instance()
