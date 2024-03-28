@@ -103,13 +103,15 @@ namespace gbc
     }
 
     // the main Ppu loop
-    void Ppu::Tick()
+    void Ppu::Tick(int cycles)
     {
+        mCycles += (cycles*3);
         // Update all the status bit we will need for rendering
         LcdControlUpdate();
         // update the status reg too
         register8_t lcd_status = register8_t(*mLcdStatus, "LCD Status");
-
+        if (mCycles % 456 == 0)
+        {
         switch (mCurrMode)
         {
         case PpuMode::H_BLANK:
@@ -141,6 +143,8 @@ namespace gbc
         *mLcdStatus = lcd_status.value();
         *mLy = mCurrentScanline;
         BOOST_LOG_TRIVIAL(debug) << "Scanline: " << (int) mCurrentScanline;
+
+        }
     }
 
     void Ppu::RegisterDrawCallback(std::function<void(const DisplayBuffer &)> func)
@@ -150,6 +154,7 @@ namespace gbc
 
     void Ppu::ModeOAMScan()
     {
+        Cpu::Instance()->mVblankInt = false;
         if (mCurrentScanline < 144)
         {
             if (mBgWindowEnable)
@@ -203,6 +208,7 @@ namespace gbc
             Cpu::Instance()->mVblankInt = true;
             mDrawCallback(mLcdBuffer);
             mCurrentScanline = 0;
+
             mCurrMode = PpuMode::OAM_SCAN;
         }
     }

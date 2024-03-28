@@ -1401,6 +1401,7 @@ namespace gbc
     {
         uint16_t read = CPU->StackPop();
         CPU->PC->Set(read);
+        CPU->SetIME(true);
     }
 
     void Opcode::BitBR(byte b, std::shared_ptr<register8_t> r1)

@@ -27,7 +27,7 @@ namespace gbc
     {
     }
 
-    void Cpu::Execute()
+    int Cpu::Execute()
     {
         ProcessInterrupts();
         byte next_byte = GetByteFromPC();
@@ -41,7 +41,7 @@ namespace gbc
             {
                 BOOST_LOG_TRIVIAL(debug) << "Found CB instruction";
                 auto cmd = itr->second;
-                cmd.Execute(next_instruction);
+                return cmd.Execute(next_instruction);
             }
             else
             {
@@ -56,14 +56,14 @@ namespace gbc
             {
                 BOOST_LOG_TRIVIAL(debug) << "Found instruction";
                 auto cmd = itr->second;
-                cmd.Execute(next_instruction);
+                return cmd.Execute(next_instruction);
             }
             else
             {
                 BOOST_LOG_TRIVIAL(debug) << "Failed to find a mapped function for " << next_instruction << std::endl;
             }
         }
-
+        return 0;
     }
 
     void Cpu::StackPush(register16_t value)

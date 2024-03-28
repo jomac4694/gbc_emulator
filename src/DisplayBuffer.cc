@@ -30,4 +30,10 @@ namespace gbc
         return buffer[CoordsAsIndex(x, y, mWidth, mHeight)];
     }
 
+    void DisplayBuffer::Clear()
+    {
+        for (int i = 0; i < mHeight*mWidth; i++)
+            buffer[i] = 0x0;
+    }
+
 }

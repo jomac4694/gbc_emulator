@@ -12,6 +12,7 @@ class DisplayBuffer
         DisplayBuffer(uint32_t width, uint32_t height);
         void SetPixel(uint32_t x, uint32_t y, byte pixel);
         byte GetPixel(uint32_t x, uint32_t y) const;
+        void Clear();
 
     private:
         uint32_t mHeight;

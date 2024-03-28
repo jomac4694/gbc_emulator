@@ -56,7 +56,7 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       void DumpBufferDebug();
       Ppu();
       // perform a single ppu tick
-      void Tick();
+      void Tick(int cycles);
       void RegisterDrawCallback(std::function<void(const DisplayBuffer&)> func);
     private:
       void ReadBgTileLine(const byte y);
@@ -112,7 +112,7 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       void DrawSpriteAt(int x, int y, const SpriteBuffer& sprite_buffer);
 
 
-
+      int mCycles{0};
   };
 
 }

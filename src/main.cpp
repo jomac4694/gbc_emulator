@@ -124,7 +124,7 @@ static void Draw(const DisplayBuffer& buff)
 
 int main()
 {
-  initlog();
+ // initlog();
   auto vec = LoadRom("../src/roms/dmg-acid2.gb");
   gbc::Ram::Instance()->LoadRom(vec);
   gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
@@ -154,10 +154,8 @@ int main()
   }
     else
     {
-      gbc::Cpu::Instance()->Execute();
-      p.Tick();
-      p.Tick();
-      p.Tick();
+      auto cycles = gbc::Cpu::Instance()->Execute();
+      p.Tick(cycles);
     }
   }
 

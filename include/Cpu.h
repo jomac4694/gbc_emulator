@@ -58,7 +58,7 @@ class Cpu
 public:
     Cpu();
 
-    void Execute();
+    int Execute();
 
     void StackPush(register16_t value);
     uint16_t StackPop();
@@ -95,7 +95,8 @@ public:
 
 private:
     bool mInterruptFlag{false};
-    bool mMasterInterrupt{false};    
+    bool mMasterInterrupt{false};   
+
 };
 }
 #endif
