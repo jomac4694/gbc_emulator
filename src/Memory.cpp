@@ -29,7 +29,7 @@ namespace gbc
     {
         byte ret = mMemory[address];
         address16_t ad = address;
-        BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << ad.Hex();
+    //   BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << ad.Hex();
         return ret;
     }
 
@@ -37,7 +37,7 @@ namespace gbc
     byte Ram::ReadByte(address16_t address)
     {
         byte ret = mMemory[address.value()];
-        BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
+     //   BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
         return ret;
     }
 

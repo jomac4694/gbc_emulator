@@ -64,8 +64,8 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       void ReadWindowTileLine(const byte y);
 
       // do mode stuff functions
-      void ModeOAMScan();
-      void ModeHBlank();
+      void ModeOAMScan(register8_t& lcd_status);
+      void ModeHBlank(register8_t& lcd_status);
       void ModeDraw();
       void ModeVBlank();
 
@@ -109,11 +109,12 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
 
       // should draw the current frame to the actual GUI
       std::function<void(const DisplayBuffer&)> mDrawCallback;
-      void DrawSpriteAt(int x, int y, const SpriteBuffer& sprite_buffer);
+      void DrawSpriteAt(int x, int y,  SpriteBuffer& sprite_buffer, const register8_t& flags);
 
       int GetModeCycles();
       int mCycles{0};
       int mFramesRendered{0};
+      int mWindowLinesDrawn{0};
   };
 
 }
