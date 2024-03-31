@@ -111,8 +111,9 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       std::function<void(const DisplayBuffer&)> mDrawCallback;
       void DrawSpriteAt(int x, int y, const SpriteBuffer& sprite_buffer);
 
-
+      int GetModeCycles();
       int mCycles{0};
+      int mFramesRendered{0};
   };
 
 }

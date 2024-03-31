@@ -13,9 +13,5 @@ def gen_code():
         gen_test_block(os.path.basename(line))
 
 
-#op_list = read_codes(os.getcwd()+"/opcodes.txt")
-#gen_code(op_list)
-            
-#op_list = read_codes(os.getcwd()+"/otherstuff2.txt")
-#gen_code(op_list)
+
 gen_code()

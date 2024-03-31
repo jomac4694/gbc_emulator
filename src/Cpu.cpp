@@ -107,11 +107,13 @@ namespace gbc
 
     void Cpu::SetIME(bool val)
     {
+        BOOST_LOG_TRIVIAL(debug) << "Setting IME " << (int) val;
         mMasterInterrupt = val;
     }
 
     void Cpu::SetIF(bool val)
     {
+        BOOST_LOG_TRIVIAL(debug) << "Setting IF " << (int) val;
         mInterruptFlag = val;
     }
 
@@ -122,19 +124,22 @@ namespace gbc
         {
             if (mVblankInt)
             {
+            BOOST_LOG_TRIVIAL(debug) << "Doing VBLANK Inter";
             StackPush(PC->value());
             PC->Set(0x0040);
             mVblankInt = false;
             }
-            else
+            else if (mCoinInt)
             {
+                BOOST_LOG_TRIVIAL(debug) << "Doing COIN Inter";
             StackPush(PC->value());
             PC->Set(0x0048);
             }
 
-            mInterruptFlag = false;
+            
             mMasterInterrupt = false;
         }
+        mInterruptFlag = false;
     }
 
     std::shared_ptr<Cpu> Cpu::Instance()

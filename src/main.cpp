@@ -124,8 +124,8 @@ static void Draw(const DisplayBuffer& buff)
 
 int main()
 {
- // initlog();
-  auto vec = LoadRom("../src/roms/dmg-acid2.gb");
+  initlog();
+  auto vec = LoadRom("../src/roms/Tetris.gb");
   gbc::Ram::Instance()->LoadRom(vec);
   gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
   std::cout << vec.size() << std::endl;

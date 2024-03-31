@@ -92,6 +92,7 @@ public:
 
     void ProcessInterrupts();
     bool mVblankInt{false};
+    bool mCoinInt{false};
 
 private:
     bool mInterruptFlag{false};

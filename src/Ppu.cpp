@@ -102,6 +102,26 @@ namespace gbc
     {
     }
 
+    int Ppu::GetModeCycles()
+    {
+        int cycles = 0;
+        switch (mCurrMode)
+        {
+        case PpuMode::H_BLANK:
+            cycles = 188;
+            break;
+        case PpuMode::V_BLANK:
+            cycles = 456;
+            break;
+        case PpuMode::OAM_SCAN:
+            cycles = 80;
+            break;
+        case PpuMode::DRAW:
+            cycles = 188;
+            break;
+        }  
+        return cycles;
+    }
     // the main Ppu loop
     void Ppu::Tick(int cycles)
     {
@@ -110,13 +130,14 @@ namespace gbc
         LcdControlUpdate();
         // update the status reg too
         register8_t lcd_status = register8_t(*mLcdStatus, "LCD Status");
-        if (mCycles % 456 == 0)
+
+        if (mCycles >= GetModeCycles())
         {
+
         switch (mCurrMode)
         {
         case PpuMode::H_BLANK:
             ModeHBlank();
-            mCurrMode = PpuMode::V_BLANK;
             break;
         case PpuMode::V_BLANK:
             ModeVBlank();
@@ -125,17 +146,22 @@ namespace gbc
             ModeOAMScan();
             break;
         case PpuMode::DRAW:
+            ModeDraw();
             mCurrMode = PpuMode::H_BLANK;
             break;
         }
 
         if (mCurrentScanline == *mLyc)
         {
-            std::cout << "setting coincidence thing" << std::endl;
+            std::cout << "setting coincidence thing with y " << (int) mCurrentScanline << std::endl;
             lcd_status.SetBitLSB(2);
             Cpu::Instance()->SetIF(true);
-            *mLy = 0;
-            
+            Cpu::Instance()->mCoinInt = true;
+           *mLy = 0;
+        }
+        else
+        {
+            lcd_status.ResetBitLSB(2);
         }
         lcd_status.ResetBitLSB(0);
         lcd_status.ResetBitLSB(0);
@@ -143,7 +169,8 @@ namespace gbc
         *mLcdStatus = lcd_status.value();
         *mLy = mCurrentScanline;
         BOOST_LOG_TRIVIAL(debug) << "Scanline: " << (int) mCurrentScanline;
-
+        BOOST_LOG_TRIVIAL(debug) << "WindowEnabled: " << (int) mWindowEnable;
+        mCycles = 0;
         }
     }
 
@@ -155,37 +182,43 @@ namespace gbc
     void Ppu::ModeOAMScan()
     {
         Cpu::Instance()->mVblankInt = false;
-        if (mCurrentScanline < 144)
-        {
-            if (mBgWindowEnable)
-                ReadBgTileLine(mCurrentScanline);
 
-            if (mWindowEnable)
-            {
-                std::cout << "drawing window" << std::endl;
-                ReadWindowTileLine(mCurrentScanline);
-            }
-            mCurrentScanline++;
-
-        }
-        else
-        {
+          //  if (mWindowEnable)
+           // {
+            //    std::cout << "drawing window" << std::endl;
+             //   ReadWindowTileLine(mCurrentScanline);
+           // }
             mCurrMode = PpuMode::DRAW;
-        }
     }
 
     void Ppu::ModeHBlank()
     {
-        
+        mCurrentScanline++;
+        if (mCurrentScanline < 144)
+        {
+            mCurrMode = PpuMode::OAM_SCAN;
+        }
+        else
+        {
+            mCurrMode = PpuMode::V_BLANK;
+        }
+
     }
 
     void Ppu::ModeDraw()
     {
+          ReadBgTileLine(mCurrentScanline);
     }
 
     void Ppu::ModeVBlank()
     {
-        if (mCurrentScanline < 154)
+        if (mCurrentScanline == 153)
+        {
+            //Cpu::Instance()->mVblankInt = true;
+            //Cpu::Instance()->SetIF(true);
+            mCurrentScanline++;
+        }
+        else if (mCurrentScanline < 154)
         {
             // just do nothing for now....
             mCurrentScanline++;
@@ -206,9 +239,10 @@ namespace gbc
                 DrawSpriteAt(x_pos, y_pos, as_map);
             }
             Cpu::Instance()->mVblankInt = true;
+            Cpu::Instance()->SetIF(true);
             mDrawCallback(mLcdBuffer);
             mCurrentScanline = 0;
-
+            mFramesRendered++;
             mCurrMode = PpuMode::OAM_SCAN;
         }
     }
@@ -218,8 +252,12 @@ namespace gbc
     {
 
         std::vector<byte> line_buffer;
-
+        std::vector<byte> window_buff;
         byte bg_y = (y + *mSy) % DISPLAY_LAYER_HEIGHT;
+        
+        if (mBgWindowEnable && !(y >= *mWy && mWindowEnable))
+        {
+        //    std::cout << "drawing background " << std::endl;
         // I guess this will have 2 steps, first we need to actually pull data from line Y
         // then write the data to the LCD buffer appropriately
         for (int i = 0; i < BG_TILES_PER_ROW; i++)
@@ -230,8 +268,16 @@ namespace gbc
             //     std::cout << "got tile num " << (int) tile_num << std::endl;
             //  auto til = ReadTileDataBlock(tile_num);
             //      TileData p(til);
-            //      PrintTile(p.AsPixelMap());                                                                        // 2 bytes per single tile line
-            uint16_t tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * tile_num) + ((bg_y % TILE_WIDTH) * 2);
+            //      PrintTile(p.AsPixelMap());     
+            uint16_t tile_data_start = 0;
+            if (!mTileDataSelect)
+            {
+                tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * static_cast<int8_t>(tile_num)) + ((bg_y % TILE_WIDTH) * 2);
+            }   
+            else
+            {
+                tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * tile_num) + ((bg_y % TILE_WIDTH) * 2);
+            }                                                       
             address16_t d = tile_data_start;
             //   std::cout << "getting tile data from addr " << d << std::endl;
             byte byte1 = gbc::Ram::Instance()->ReadByte(tile_data_start);
@@ -240,17 +286,76 @@ namespace gbc
             byte byte2 = gbc::Ram::Instance()->ReadByte(tile_data_start + 1);
             //   std::cout << "byte2: " << byte2 << std::endl;
             TwoBPP(byte1, byte2, line_buffer);
+            // now populate the LCD buffer
+            byte bg_x = 0 + *mSx;
+            for (int i = 0; i < LCD_WIDTH; i++)
+            {
+                mLcdBuffer.SetPixel(i, y, line_buffer[bg_x % DISPLAY_LAYER_WIDTH]);
+                bg_x++;
+            }
+
+        }
+        
+        }
+        
+        else
+        {
+            for (int i = 0; i < DISPLAY_LAYER_WIDTH + 1; i++)
+            {
+                line_buffer.push_back(0x0);
+            }
         }
 
-        // now populate the LCD buffer
-        byte bg_x = 0 + *mSx;
-        for (int i = 0; i < LCD_WIDTH; i++)
+        if (y >= *mWy && mWindowEnable && *mWx <= 166)
         {
-            mLcdBuffer.SetPixel(i, y, line_buffer[bg_x % DISPLAY_LAYER_WIDTH]);
-            bg_x++;
-        }
+      //      std::cout << "drawing window" << std::endl;
+       //     std::cout << "y= " << (int) y << std::endl;
+        //    std::cout << "mWy= " << (int) *mWy << std::endl;
+            for (int i = 0; i < BG_TILES_PER_ROW; i++)
+            {
+                address16_t addr = (mWindowBgMapOffset + ((y - *mWy)) * BG_TILES_PER_ROW + i);
+                //     std::cout << "getting tile num from addr " << addr << std::endl;
+                uint8_t tile_num = gbc::Ram::Instance()->ReadByte(addr.value());
+                //     std::cout << "got tile num " << (int) tile_num << std::endl;
+                //  auto til = ReadTileDataBlock(tile_num);
+                //      TileData p(til);
+                //      PrintTile(p.AsPixelMap());      
+                 uint16_t tile_data_start = 0;                           
+                if (!mTileDataSelect)
+                {
+                      tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * static_cast<int8_t>(tile_num)) + (((y - *mWy) % TILE_WIDTH) * 2);
+                }
+                else
+                {
+                     tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * tile_num) + (((y - *mWy) % TILE_WIDTH) * 2);
+                }
+               
+                address16_t d = tile_data_start;
+                //   std::cout << "getting tile data from addr " << d << std::endl;
+                byte byte1 = gbc::Ram::Instance()->ReadByte(tile_data_start);
+                //   std::cout << "byte1: " << byte1 << std::endl;
+
+                byte byte2 = gbc::Ram::Instance()->ReadByte(tile_data_start + 1);
+                //   std::cout << "byte2: " << byte2 << std::endl;
+                TwoBPP(byte1, byte2, window_buff);
+            }
+        
+                for (auto& a : window_buff)
+                {
+                    std::cout << (int) a;
+                }
+                std::cout << std::endl;
+                byte win_x = 0;
+                for (int i = *mWx - 7; i < LCD_WIDTH; i++)
+                {
+                    mLcdBuffer.SetPixel(i, y, window_buff[win_x]);
+                    win_x++;
+                }
+                
+                }
     }
 
+/*
     void Ppu::ReadWindowTileLine(const byte y)
     {
         std::vector<byte> line_buffer;
@@ -268,7 +373,9 @@ namespace gbc
             //     std::cout << "got tile num " << (int) tile_num << std::endl;
             //  auto til = ReadTileDataBlock(tile_num);
             //      TileData p(til);
-            //      PrintTile(p.AsPixelMap());                                                                        // 2 bytes per single tile line
+            //      PrintTile(p.AsPixelMap());
+                                                                                    // 2 bytes per single tile line
+        
             uint16_t tile_data_start = mTileDataSelectOffset + (BYTES_PER_TILE * tile_num) + ((bg_y % TILE_WIDTH) * 2);
             address16_t d = tile_data_start;
             //   std::cout << "getting tile data from addr " << d << std::endl;
@@ -288,15 +395,19 @@ namespace gbc
             mLcdBuffer.SetPixel(i, y, line_buffer[lx++]);
         }
     }
-
+*/
     void Ppu::LcdControlUpdate()
     {
         register8_t lcd_control = register8_t(*mLcdControl, "LCD Control");
-        register8_t sy = register8_t(*mWy, "W Y");
-        register8_t sx = register8_t(*mWx, "W X");
-        std::cout << "LcdControlUpdate " << lcd_control << std::endl;
-        // std::cout << "LcdControlUpdate " << sx << std::endl;
-        // std::cout << "LcdControlUpdate " << sy << std::endl;
+        register8_t wy = register8_t(*mWy, "W Y");
+        register8_t wx = register8_t(*mWx, "W X");
+        register8_t sy = register8_t(*mSy, "S Y");
+        register8_t sx = register8_t(*mSx, "S X");
+     //   std::cout << "LcdControlUpdate " << lcd_control << std::endl;
+     //    std::cout << "LcdControlUpdate " << wy << std::endl;
+     //    std::cout << "LcdControlUpdate " << wx << std::endl;
+     //    std::cout << "LcdControlUpdate " << sy << std::endl;
+     //    std::cout << "LcdControlUpdate " << sx << std::endl;
 
         mLcdEnabled = lcd_control.BitAtLSB(7);
         mWindowMapSelect = lcd_control.BitAtLSB(6);
@@ -309,7 +420,7 @@ namespace gbc
 
         mWindowBgMapOffset = mWindowMapSelect ? 0x9C00 : 0x9800;
         mBgTileMapOffset = mBgTileMapSelect ? 0x9C00 : 0x9800;
-        mTileDataSelectOffset = mTileDataSelect ? 0x8000 : 0x8800;
+        mTileDataSelectOffset = mTileDataSelect ? 0x8000 : 0x9000;
     }
 
     void Ppu::DumpBufferDebug()
@@ -323,6 +434,7 @@ namespace gbc
             }
             std::cout << std::endl;
         }
+        std::cout << "FramesRendered: " << mFramesRendered << std::endl;
     }
 
     void Ppu::DrawSpriteAt(int x, int y, const SpriteBuffer &sprite_buffer) // 1024 tiles
