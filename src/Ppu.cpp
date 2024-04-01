@@ -138,7 +138,7 @@ namespace gbc
             ModeHBlank(lcd_status);
             break;
         case PpuMode::V_BLANK:
-            ModeVBlank();
+            ModeVBlank(lcd_status);
             break;
         case PpuMode::OAM_SCAN:
             ModeOAMScan(lcd_status);
@@ -151,7 +151,7 @@ namespace gbc
         *mLy = mCurrentScanline;
             if (*mLy == *mLyc && !lcd_status.BitAtLSB(2) )
             {
-                std::cout << "setting coincidence thing with y " << (int) mCurrentScanline << std::endl;
+                //std::cout << "setting coincidence thing with y " << (int) mCurrentScanline << std::endl;
                 lcd_status.SetBitLSB(2);
                 Cpu::Instance()->SetIF(true);
                 Cpu::Instance()->mCoinInt = true;
@@ -168,7 +168,7 @@ namespace gbc
         BOOST_LOG_TRIVIAL(debug) << "Scanline: " << (int) mCurrentScanline;
         BOOST_LOG_TRIVIAL(debug) << "WindowEnabled: " << (int) mWindowEnable;
         if (mWindowEnable)
-            std::cout << "Window is enabled" << std::endl;
+            //std::cout << "Window is enabled" << std::endl;
         mCycles = 0;
         }
     }
@@ -196,12 +196,10 @@ namespace gbc
         if (mCurrentScanline < 144)
         {
             mCurrMode = PpuMode::OAM_SCAN;
-
         }
         else
         {
-            Cpu::Instance()->mVblankInt = true;
-            Cpu::Instance()->SetIF(true);
+
             mCurrMode = PpuMode::V_BLANK;
         }
 
@@ -212,7 +210,7 @@ namespace gbc
           ReadBgTileLine(mCurrentScanline);
     }
 
-    void Ppu::ModeVBlank()
+    void Ppu::ModeVBlank(register8_t& lcd_status)
     {
         if (mCurrentScanline == 153)
         {
@@ -244,6 +242,9 @@ namespace gbc
 
             mDrawCallback(mLcdBuffer);
             mCurrentScanline = 0;
+            Cpu::Instance()->mVblankInt = true;
+            Cpu::Instance()->SetIF(true);
+            lcd_status.SetBitLSB(4);
             mFramesRendered++;
             mCurrMode = PpuMode::OAM_SCAN;
             mWindowLinesDrawn = 0;
@@ -443,7 +444,17 @@ namespace gbc
         {
             for (int x = start_x; x < start_x + SPRITE_WIDTH; x++)
             {
+                if (!flags.BitAtLSB(7))
+                {
                 mLcdBuffer.SetPixel(x, y, sprite_buffer[CoordsAsIndex(sprite_x, sprite_y, 8, 8)]);
+                }
+                else
+                {
+                    if (!mLcdBuffer.GetPixel(x,y))
+                    {
+                        mLcdBuffer.SetPixel(x, y, sprite_buffer[CoordsAsIndex(sprite_x, sprite_y, 8, 8)]);
+                    }
+                }
                 sprite_x++;
             }
             sprite_y++;
@@ -451,4 +462,27 @@ namespace gbc
         }
 
     }
+
+    // Search for (and buffer) sprites in the current line
+    void Ppu::ScanSprites()
+    {
+        auto lines_contains_sprite = [] (uint8_t sprite_y, uint8_t y) {
+            return (y >= sprite_y && y < (sprite_y + SPRITE_HEIGHT));
+        };
+        for (int i = 0; i < 40; i++)
+        {
+            auto sprite_block = ReadSpriteBlock(i);
+            Sprite s;
+            s.y_pos = sprite_block[0] - 16;
+            s.x_pos = sprite_block[1] - 8;
+            s.tile_index = sprite_block[2];
+            s.flags = sprite_block[3];
+
+            if (lines_contains_sprite(s.y_pos, mCurrentScanline))
+            {
+                mSpriteLineBuffer.push_back(s);
+            }
+        }
+    }
 }
+

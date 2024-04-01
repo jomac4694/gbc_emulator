@@ -13,6 +13,7 @@
 #include <boost/log/expressions.hpp>
 #include "Ppu.h"
 #include "DisplayBuffer.h"
+#include <SFML/Window/Keyboard.hpp>
 
 using namespace gbc;
 using namespace boost::posix_time;
@@ -99,6 +100,53 @@ static void SetPixelsLCD(const DisplayBuffer& buff)
   }
 }
 
+static void UpdateInput()
+{
+    register8_t input_reg = register8_t(Ram::Instance()->ReadByte(0xFF00), "Joypad");
+    input_reg.Set(0xCF);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+   //   std::cout << "W is pressed" << std::endl;
+      input_reg.ResetBitLSB(2);
+      input_reg.ResetBitLSB(4);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+      input_reg.ResetBitLSB(1);
+      input_reg.ResetBitLSB(4);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+      input_reg.ResetBitLSB(3);
+      input_reg.ResetBitLSB(4);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+      input_reg.ResetBitLSB(0);
+      input_reg.ResetBitLSB(4);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    {
+      input_reg.ResetBitLSB(0);
+      input_reg.ResetBitLSB(5);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+    {
+      input_reg.ResetBitLSB(1);
+      input_reg.ResetBitLSB(5);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+    {
+      input_reg.ResetBitLSB(3);
+      input_reg.ResetBitLSB(5);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+    {
+      input_reg.ResetBitLSB(2);
+      input_reg.ResetBitLSB(5);
+    }
+    gbc::Ram::Instance()->WriteByte(0xFF00, input_reg.value());
+}
 static void EventLoop()
 {
     for (auto event = sf::Event{}; window->pollEvent(event);)
@@ -124,10 +172,10 @@ static void Draw(const DisplayBuffer& buff)
 
 int main()
 {
-  initlog();
-  auto vec = LoadRom("../src/roms/dmg-acid2.gb");
+ // initlog();
+  auto vec = LoadRom("../src/roms/Tetris.gb");
   gbc::Ram::Instance()->LoadRom(vec);
-  gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
+
   std::cout << vec.size() << std::endl;
   Ppu p;
   
@@ -155,6 +203,7 @@ int main()
     else
     {
       auto cycles = gbc::Cpu::Instance()->Execute();
+        UpdateInput();
       p.Tick(cycles);
     }
   }

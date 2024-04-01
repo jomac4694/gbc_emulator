@@ -42,6 +42,14 @@ constexpr static uint16_t LCD_TILES_PER_ROW = 20;
 constexpr static uint16_t LCD_TILES_PER_COL = 18;
 constexpr static uint16_t BYTES_PER_TILE = 16;
     typedef std::array<byte, SPRITE_BUFFER_SIZE> SpriteBuffer;
+
+struct Sprite
+{
+    uint8_t x_pos;
+    uint8_t y_pos;
+    uint8_t tile_index;
+    uint8_t flags;
+};
   enum PpuMode
   {
     H_BLANK,
@@ -67,7 +75,7 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       void ModeOAMScan(register8_t& lcd_status);
       void ModeHBlank(register8_t& lcd_status);
       void ModeDraw();
-      void ModeVBlank();
+      void ModeVBlank(register8_t& lcd_status);
 
       // Read and draw the sprite at sprite_index
       void DrawSprite(uint16_t sprite_index); 
@@ -115,6 +123,10 @@ constexpr static uint16_t BYTES_PER_TILE = 16;
       int mCycles{0};
       int mFramesRendered{0};
       int mWindowLinesDrawn{0};
+
+      void ScanSprites();
+      std::vector<Sprite> mSpriteLineBuffer;
+
   };
 
 }

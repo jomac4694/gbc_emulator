@@ -29,7 +29,7 @@ namespace gbc
     {
         byte ret = mMemory[address];
         address16_t ad = address;
-    //   BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << ad.Hex();
+      BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << ad.Hex();
         return ret;
     }
 
@@ -37,7 +37,7 @@ namespace gbc
     byte Ram::ReadByte(address16_t address)
     {
         byte ret = mMemory[address.value()];
-     //   BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
+      BOOST_LOG_TRIVIAL(debug) << "Read byte " << register8_t::Hex(ret) << " at " << address.Hex();
         return ret;
     }
 
@@ -51,14 +51,20 @@ namespace gbc
 
     void Ram::WriteByte(uint16_t address, register8_t val)
     {
+        if (address > 0x8000)
+        {
         BOOST_LOG_TRIVIAL(debug) << "Setting address " << address << " to " << val;
         mMemory[address] = val.value();
+        }
     }
 
     void Ram::WriteByte(address16_t address, register8_t val)
     {   
+        if (address.value() > 0x8000)
+        {
         BOOST_LOG_TRIVIAL(debug) << "Setting address " << address.Hex() << " to " << val.Hex();
         mMemory[address.value()] = val.value();
+        }
     }
 
     void Ram::WriteWord(address16_t address, register16_t value)
