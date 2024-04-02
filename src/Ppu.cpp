@@ -291,15 +291,15 @@ namespace gbc
             //   std::cout << "byte2: " << byte2 << std::endl;
             TwoBPP(byte1, byte2, line_buffer);
             // now populate the LCD buffer
+
+
+        }
             byte bg_x = 0 + *mSx;
             for (int i = 0; i < LCD_WIDTH; i++)
             {
                 mLcdBuffer.SetPixel(i, y, line_buffer[bg_x % DISPLAY_LAYER_WIDTH]);
                 bg_x++;
             }
-
-        }
-        
         }
         
         else

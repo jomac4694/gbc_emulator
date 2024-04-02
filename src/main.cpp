@@ -18,13 +18,13 @@
 using namespace gbc;
 using namespace boost::posix_time;
 
-static const byte PIXEL_SCALE = 3;
+static const byte PIXEL_SCALE = 2;
 static std::unique_ptr<sf::RenderWindow> window;
 static sf::Sprite sprite;
 
 static sf::Image frame; // represents the entire current frame
 
-void initlog()
+void disablelog()
 {
 	boost::log::core::get()->set_filter
     (
@@ -100,48 +100,54 @@ static void SetPixelsLCD(const DisplayBuffer& buff)
   }
 }
 
-static void UpdateInput()
+static void UpdateInput(int scancode)
 {
     register8_t input_reg = register8_t(Ram::Instance()->ReadByte(0xFF00), "Joypad");
-    input_reg.Set(0xCF);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    if (scancode == sf::Keyboard::W)
     {
-   //   std::cout << "W is pressed" << std::endl;
+      std::cout << "W is pressed" << std::endl;
       input_reg.ResetBitLSB(2);
       input_reg.ResetBitLSB(4);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (scancode ==  sf::Keyboard::A)
     {
+      std::cout << "A is pressed" << std::endl;
       input_reg.ResetBitLSB(1);
       input_reg.ResetBitLSB(4);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+     if (scancode ==  sf::Keyboard::S)
     {
+      std::cout << "S is pressed" << std::endl;
       input_reg.ResetBitLSB(3);
       input_reg.ResetBitLSB(4);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+     if (scancode == sf::Keyboard::D)
     {
+      std::cout << "D is pressed" << std::endl;
       input_reg.ResetBitLSB(0);
       input_reg.ResetBitLSB(4);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+     if (scancode == sf::Keyboard::E)
     {
+      std::cout << "E is pressed" << std::endl;
       input_reg.ResetBitLSB(0);
       input_reg.ResetBitLSB(5);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+     if (scancode == sf::Keyboard::F)
     {
+      std::cout << "F is pressed" << std::endl;
       input_reg.ResetBitLSB(1);
       input_reg.ResetBitLSB(5);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+     if (scancode == sf::Keyboard::R)
     {
+      std::cout << "R is pressed" << std::endl;
       input_reg.ResetBitLSB(3);
       input_reg.ResetBitLSB(5);
     }
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+     if (scancode == sf::Keyboard::G)
     {
+      std::cout << "G is pressed" << std::endl;
       input_reg.ResetBitLSB(2);
       input_reg.ResetBitLSB(5);
     }
@@ -151,6 +157,15 @@ static void EventLoop()
 {
     for (auto event = sf::Event{}; window->pollEvent(event);)
     {
+          if (event.type == sf::Event::KeyPressed) {
+          //  UpdateInput(event.key.code);
+            continue;
+        }
+
+        if (event.type == sf::Event::KeyReleased) {
+            //UpdateInput(event.key.code);
+            continue;
+        }
         if (event.type == sf::Event::Closed)
         {
             window->close();
@@ -160,7 +175,9 @@ static void EventLoop()
 static void Draw(const DisplayBuffer& buff)
 {
   //  std::cout << "doing the real draw" << std::endl;
+        
     sf::Texture texture; 
+   // UpdateInput();
     EventLoop();
     window->clear(sf::Color::White);
     SetPixelsLCD(buff);
@@ -172,7 +189,7 @@ static void Draw(const DisplayBuffer& buff)
 
 int main()
 {
- // initlog();
+//  disablelog();
   auto vec = LoadRom("../src/roms/Tetris.gb");
   gbc::Ram::Instance()->LoadRom(vec);
 
@@ -181,7 +198,7 @@ int main()
   
   window = std::make_unique<sf::RenderWindow>(sf::VideoMode( LCD_WIDTH * PIXEL_SCALE, LCD_HEIGHT *PIXEL_SCALE), "Jomac Gameboy", sf::Style::Titlebar | sf::Style::Close );
   frame.create( LCD_WIDTH * PIXEL_SCALE, LCD_HEIGHT * PIXEL_SCALE);
-  window->setFramerateLimit(60);
+ // window->setFramerateLimit(60);
   window->display();
 
   p.RegisterDrawCallback(Draw);
@@ -192,6 +209,10 @@ int main()
  //   gbc::Cpu::Instance()->Execute();
  //   fired++;
  // }
+ uint64_t counter = 0;
+ auto start = Utils::Time::NowMilli();
+ auto program_start = Utils::Time::NowMilli();
+gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
   while (true)
   {
   //  std::cout << "fired: " << fired << std::endl;
@@ -199,12 +220,24 @@ int main()
     {
       p.DumpBufferDebug();
       break;
-  }
+    }
     else
     {
+      
       auto cycles = gbc::Cpu::Instance()->Execute();
-        UpdateInput();
+      
       p.Tick(cycles);
+      if ((Utils::Time::NowMilli() - program_start) < 10000)
+      {
+          gbc::Ram::Instance()->WriteByte(0xFF00, 0xCF);
+      }
+      if ((Utils::Time::NowMilli() - start) > 1000)
+      {
+        
+        float elapsed = (Utils::Time::NowMilli() - program_start) / 1000.0;
+        std::cout << "frames: " << (p.mFramesRendered / elapsed) << std::endl;
+        start = Utils::Time::NowMilli();
+      }
     }
   }
 

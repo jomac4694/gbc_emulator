@@ -66,6 +66,7 @@ struct Sprite
       // perform a single ppu tick
       void Tick(int cycles);
       void RegisterDrawCallback(std::function<void(const DisplayBuffer&)> func);
+      int mFramesRendered{0};
     private:
       void ReadBgTileLine(const byte y);
       
@@ -121,7 +122,7 @@ struct Sprite
 
       int GetModeCycles();
       int mCycles{0};
-      int mFramesRendered{0};
+      
       int mWindowLinesDrawn{0};
 
       void ScanSprites();

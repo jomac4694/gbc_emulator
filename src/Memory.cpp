@@ -50,10 +50,11 @@ namespace gbc
     }
 
     void Ram::WriteByte(uint16_t address, register8_t val)
-    {
+    {   
+        address16_t ad = address;
         if (address > 0x8000)
         {
-        BOOST_LOG_TRIVIAL(debug) << "Setting address " << address << " to " << val;
+        BOOST_LOG_TRIVIAL(debug) << "Setting address " << ad.Hex() << " to " << val;
         mMemory[address] = val.value();
         }
     }
