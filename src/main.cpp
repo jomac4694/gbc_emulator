@@ -14,13 +14,20 @@
 #include "Ppu.h"
 #include "DisplayBuffer.h"
 #include <SFML/Window/Keyboard.hpp>
+#include "imgui.h"
+#include "imgui-SFML.h"
 
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/Window/Event.hpp>
 using namespace gbc;
 using namespace boost::posix_time;
 
 static const byte PIXEL_SCALE = 2;
 static std::unique_ptr<sf::RenderWindow> window;
 static sf::Sprite sprite;
+static sf::Clock deltaClock;
 
 static sf::Image frame; // represents the entire current frame
 
@@ -157,6 +164,7 @@ static void EventLoop()
 {
     for (auto event = sf::Event{}; window->pollEvent(event);)
     {
+          ImGui::SFML::ProcessEvent(*window, event);
           if (event.type == sf::Event::KeyPressed) {
           //  UpdateInput(event.key.code);
             continue;
@@ -183,13 +191,19 @@ static void Draw(const DisplayBuffer& buff)
     SetPixelsLCD(buff);
     texture.loadFromImage(frame);
     sprite.setTexture(texture, true);
+        ImGui::SFML::Update(*window, deltaClock.restart());
+
+        ImGui::Begin("Hello, world!");
+        ImGui::Button("Look at this pretty button");
+        ImGui::End();
     window->draw(sprite);
+    ImGui::SFML::Render(*window);
     window->display();
 }
 
-int main()
+void loop()
 {
-//  disablelog();
+  disablelog();
   auto vec = LoadRom("../src/roms/Tetris.gb");
   gbc::Ram::Instance()->LoadRom(vec);
 
@@ -198,7 +212,8 @@ int main()
   
   window = std::make_unique<sf::RenderWindow>(sf::VideoMode( LCD_WIDTH * PIXEL_SCALE, LCD_HEIGHT *PIXEL_SCALE), "Jomac Gameboy", sf::Style::Titlebar | sf::Style::Close );
   frame.create( LCD_WIDTH * PIXEL_SCALE, LCD_HEIGHT * PIXEL_SCALE);
- // window->setFramerateLimit(60);
+  window->setFramerateLimit(60);
+  ImGui::SFML::Init(*window);
   window->display();
 
   p.RegisterDrawCallback(Draw);
@@ -212,7 +227,8 @@ int main()
  uint64_t counter = 0;
  auto start = Utils::Time::NowMilli();
  auto program_start = Utils::Time::NowMilli();
-gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
+gbc::Ram::Instance()->WriteByte(0xFF00, 0x0F);
+sf::Clock deltaClock;
   while (true)
   {
   //  std::cout << "fired: " << fired << std::endl;
@@ -238,7 +254,15 @@ gbc::Ram::Instance()->WriteByte(0xFF00, 0xFF);
         std::cout << "frames: " << (p.mFramesRendered / elapsed) << std::endl;
         start = Utils::Time::NowMilli();
       }
+
+        
+        
     }
   }
 
+}
+
+int main()
+{
+loop();
 }
